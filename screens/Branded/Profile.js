@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profile1: {
-    backgroundColor: "black",
+    backgroundColor: "white",
     flex: 1,
   },
   name: {

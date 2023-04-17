@@ -1,30 +1,146 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+  Button,
   ImageBackground,
   ScrollView,
+  Image,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import Swiper from "react-native-swiper";
 import { Camera, CameraType } from "expo-camera";
+import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
 
 const Detect = ({ navigation }) => {
-  const [hasCameraPermission, setHasCameraPermission] = useState(null);
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
   const [active, setActive] = useState(0);
-  const cameraRef = useRef();
-  const videoRef = useRef();
+  const [url, setUrl] = useState("");
+  const [mood, setMood] = useState("");
+
+  const detectEmotion = async () => {
+    // console.log("Lynn", options);
+
+    await axios
+      .request({
+        method: "POST",
+        url: "https://emotion-detection2.p.rapidapi.com/emotion-detection",
+        headers: {
+          "content-type": "application/json",
+          "X-RapidAPI-Key":
+            "6e3a44137cmshf321fbccc5cb04dp132bf2jsnbb7f3808ab4a",
+          "X-RapidAPI-Host": "emotion-detection2.p.rapidapi.com",
+        },
+        data: `{"url":"${url}"}`,
+      })
+      .then(function (response) {
+        console.log("Lynn", response.data);
+        setMood(response.data[0].emotion.value);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  };
+
+  const [image, setImage] = useState(null);
+
+  // const pickImage = async () => {
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 1,
+  //   });
+
+  //   if (!result.canceled) {
+  //     setImage(result.assets[0].uri);
+
+  //     const url = "https://api.imgbb.com/1/upload";
+  //     const apiKey = "e400225c1aca3fbc13a11be33e2bb24d";
+  //     const expiration = 1000000;
+  //     const headers = {
+  //       "Content-Type": "multipart/form-data",
+  //     };
+
+  //     const formData = new FormData();
+  //     formData.append("key", apiKey);
+  //     formData.append("expiration", expiration);
+  //     formData.append("image", {
+  //       uri: image,
+  //       type: "image/jpeg",
+  //       name: "image.jpg",
+  //     });
+
+  //     await axios
+  //       .post(url, formData, headers)
+  //       .then((response) => {
+  //         console.log("UPLOAD SUCCESS", response.data.data.url);
+  //         setUrl(response.data.data.url);
+  //       })
+  //       .catch((error) => {
+  //         console.log("ERROR", error);
+  //       });
+  //   }
+  // };
+
+  const uploadImage = async (imageUri) => {
+    const url = "https://api.imgbb.com/1/upload";
+    const apiKey = "e400225c1aca3fbc13a11be33e2bb24d";
+    const expiration = 1000000;
+    const headers = {
+      "Content-Type": "multipart/form-data",
+    };
+
+    const formData = new FormData();
+    formData.append("key", apiKey);
+    formData.append("expiration", expiration);
+    formData.append("image", {
+      uri: imageUri,
+      type: "image/jpeg",
+      name: "image.jpg",
+    });
+
+    try {
+      const response = await axios.post(url, formData, headers);
+      console.log("UPLOAD SUCCESS", response.data.data.url);
+      setUrl(response.data.data.url);
+    } catch (error) {
+      console.log("ERROR", error);
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      await uploadImage(result.assets[0].uri);
+    }
+  };
 
   return (
     <>
       {active === 1 ? (
-        // <Camera type={type} ref={cameraRef} style={{ flex: 1 }} />
-        <View>
-          <TouchableOpacity style={{ marginTop: 100 }}>
-            <Text>hiii</Text>
-          </TouchableOpacity>
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <Button title="Pick an image from camera roll" onPress={pickImage} />
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 200, height: 200 }}
+            />
+          )}
+
+          <Button title="Test" onPress={detectEmotion} />
+
+          {mood && <Text>You are {mood}</Text>}
         </View>
       ) : (
         <ImageBackground
@@ -128,3 +244,5 @@ const Detect = ({ navigation }) => {
 };
 
 export default Detect;
+
+const styles = StyleSheet.create({});
