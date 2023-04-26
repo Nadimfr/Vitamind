@@ -1,5 +1,5 @@
-import { LinearGradient } from "expo-linear-gradient";
-import React, { useContext, useState } from "react";
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useContext, useState } from 'react';
 import {
   KeyboardAvoidingView,
   StatusBar,
@@ -7,24 +7,37 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import Button from "../../components/Button";
-import TextField from "../../components/TextField";
+} from 'react-native';
+import Button from '../../components/Button';
+import TextField from '../../components/TextField';
+import * as api from '../../controllers/ApiUser';
+import { storeData } from '../../helpers/AsyncStorage';
 
 function Login({ navigation }) {
-  const [user, setUser] = useState({ email: "", password: "" });
+  const [user, setUser] = useState({ email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = (userInfo) => {
+    setLoading(true);
+    api.userLogin(userInfo).then((res) => {
+      storeData('token', res.token);
+      navigation.navigate('Home');
+      setLoading(false);
+    });
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <KeyboardAvoidingView behavior="position">
-        <Text style={[styles.text, { color: "#142F21" }]}>Welcome to</Text>
+        <Text style={[styles.text, { color: '#142F21' }]}>Welcome to</Text>
         <Text
           style={[
             styles.text,
             {
               marginTop: -5,
-              fontFamily: "Poppins_SemiBold",
-              color: "#42A45C",
+              fontFamily: 'Poppins_SemiBold',
+              color: '#42A45C',
               marginBottom: 50,
             },
           ]}
@@ -51,7 +64,7 @@ function Login({ navigation }) {
           />
           <TouchableOpacity
             activeOpacity={0.5}
-            style={{ alignSelf: "flex-end", marginTop: 5 }}
+            style={{ alignSelf: 'flex-end', marginTop: 5 }}
           >
             <Text style={styles.text1}>Forgot Password ?</Text>
           </TouchableOpacity>
@@ -64,7 +77,7 @@ function Login({ navigation }) {
           }}
         >
           <Button
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => handleLogin(user)}
             title="Login"
             disabled={(!user.email || !user.password) && true}
           />
@@ -74,12 +87,12 @@ function Login({ navigation }) {
           <Text style={styles.text1}>Not a member? </Text>
           <TouchableOpacity
             activeOpacity={0.5}
-            onPress={() => navigation.navigate("Register")}
+            onPress={() => navigation.navigate('Register')}
           >
             <Text
               style={[
                 styles.text1,
-                { fontFamily: "Poppins_SemiBold", color: "#42A45C" },
+                { fontFamily: 'Poppins_SemiBold', color: '#42A45C' },
               ]}
             >
               Register
@@ -90,23 +103,23 @@ function Login({ navigation }) {
 
         <View
           style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
             marginTop: 30,
           }}
         >
           <LinearGradient
             start={{ x: 0, y: 0.75 }}
             end={{ x: 1, y: 0.25 }}
-            colors={["transparent", "#42A45C"]}
+            colors={['transparent', '#42A45C']}
             style={styles.leftLine}
           />
           <Text style={styles.text1}>or continue with</Text>
           <LinearGradient
             end={{ x: 0, y: 0.75 }}
             start={{ x: 1, y: 0.25 }}
-            colors={["transparent", "#42A45C"]}
+            colors={['transparent', '#42A45C']}
             style={styles.leftLine}
           />
         </View>
@@ -120,31 +133,31 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "start",
-    paddingHorizontal: "7%",
+    backgroundColor: '#fff',
+    justifyContent: 'start',
+    paddingHorizontal: '7%',
     paddingTop: 150,
   },
   text: {
     fontSize: 42,
-    fontFamily: "Poppins",
-    textAlign: "left",
+    fontFamily: 'Poppins',
+    textAlign: 'left',
   },
   register: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   text1: {
-    fontFamily: "Lato",
+    fontFamily: 'Lato',
     fontSize: 14,
-    color: "#9E9C9B",
+    color: '#9E9C9B',
   },
   leftLine: {
     height: 2,
-    width: "32%",
+    width: '32%',
     marginHorizontal: 5,
   },
 });

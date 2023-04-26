@@ -1,158 +1,166 @@
-// In App.js in a new project
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Detect from './screens/Branded/Detect';
+import Login from './screens/Unbranded/Login';
+import Home from './screens/Branded/Home';
+import Register from './screens/Unbranded/Register';
+import Onboard from './screens/Unbranded/OnBoard';
+import { useFonts } from 'expo-font';
+import AppLoading from 'expo-app-loading';
+import Profile from './screens/Branded/Profile';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Appearance from './screens/Branded/Appearance';
 
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Detect from "./screens/Branded/Detect";
-import Login from "./screens/Unbranded/Login";
-import Home from "./screens/Branded/Home";
-import Register from "./screens/Unbranded/Register";
-import { useFonts } from "expo-font";
-import AppLoading from "expo-app-loading";
-import Profile from "./screens/Branded/Profile";
-
+const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function HomeScreen({ navigation }) {
+function LoggedInTabs() {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate("Details")}
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarVisible: route.name !== 'Appearance', // hide the Appearance screen from the tab bar
+      })}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" size={26} />
+          ),
+          headerShown: false,
+        }}
       />
-    </View>
-  );
-}
-
-function DetailsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Details Screen</Text>
-      <Button
-        title="Go to Details... again"
-        onPress={() => navigation.push("Details")}
+      <Tab.Screen
+        name="Journal"
+        component={Detect}
+        options={{
+          tabBarLabel: 'Journal',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="notebook-outline" size={26} />
+          ),
+          headerShown: false,
+        }}
       />
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-    </View>
-  );
-}
-
-function ProfileScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Details Screen</Text>
-      <Button
-        title="Go to Details... again"
-        onPress={() => navigation.push("Details")}
+      <Tab.Screen
+        name="Detect"
+        component={Detect}
+        options={{
+          tabBarLabel: '',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="circle-outline" size={26} />
+          ),
+          headerShown: false,
+        }}
       />
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-    </View>
+      <Tab.Screen
+        name="Doctors"
+        component={Home}
+        options={{
+          tabBarLabel: 'Doctors',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="doctor" size={26} />
+          ),
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="account" size={26} />
+          ),
+          tabBarStyle: { display: 'none' },
+          headerShown: false,
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [token, setToken] = useState('');
   let [fontsLoaded] = useFonts({
-    Poppins: require("./assets/fonts/Poppins.ttf"),
-    Poppins_SemiBold: require("./assets/fonts/Poppins-SemiBold.ttf"),
-    Poppins_Bold: require("./assets/fonts/Poppins-Bold.ttf"),
-    Lato: require("./assets/fonts/Lato-Regular.ttf"),
+    Poppins: require('./assets/fonts/Poppins.ttf'),
+    Poppins_SemiBold: require('./assets/fonts/Poppins-SemiBold.ttf'),
+    Poppins_Bold: require('./assets/fonts/Poppins-Bold.ttf'),
+    Lato: require('./assets/fonts/Lato-Regular.ttf'),
   });
-  const [loggedIn, setLoggedIn] = useState(true);
+
+  useEffect(() => {
+    getToken();
+    console.log('WHATS MY TOKEN => ', token);
+  }, [token]);
+
+  const getToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      setToken(token);
+      return token;
+    } catch (error) {
+      console.log('Error getting token:', error);
+    }
+  };
+
   if (!fontsLoaded) {
     return <AppLoading />;
   }
+
   return (
     <NavigationContainer>
-      {!loggedIn ? (
-        <Tab.Navigator
-          screenOptions={{
-            tabBarStyle: {
-              display: "none",
-            },
+      <Stack.Navigator>
+        {!token && (
+          <>
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+          </>
+        )}
+        <Stack.Screen
+          name="Home"
+          component={LoggedInTabs}
+          options={{
             headerShown: false,
-          }}
-        >
-          <Tab.Screen name="Login" component={Login} />
-          <Tab.Screen name="Register" component={Register} />
-        </Tab.Navigator>
-      ) : (
-        <Tab.Navigator
-          screenOptions={{
-            tabBarActiveTintColor: "blue",
-            tabBarLabelStyle: {
-              // fontWeight: "800",
+            tabBarStyle: {
+              display: 'none',
             },
           }}
-        >
-          <Tab.Screen
-            name="Home"
-            component={Home}
-            options={{
-              tabBarLabel: "Home",
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="home" size={26} />
-              ),
-              headerShown: false,
-            }}
-          />
-          <Tab.Screen
-            name="Journal"
-            component={DetailsScreen}
-            options={{
-              tabBarLabel: "Journal",
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="notebook-outline" size={26} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name=" "
-            component={Detect}
-            options={{
-              tabBarStyle: { display: "none" },
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="circle-outline" size={30} />
-              ),
-              headerShown: false,
-            }}
-          />
-          <Tab.Screen
-            name="Doctors"
-            component={DetailsScreen}
-            options={{
-              tabBarLabel: "Doctors",
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="doctor" size={26} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Profile"
-            component={Profile}
-            options={{
-              tabBarLabel: "Profile",
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="account" size={26} />
-              ),
-              headerShown: false,
-              tabBarStyle: {
-                display: "none",
-              },
-            }}
-          />
-        </Tab.Navigator>
-      )}
+        />
+        <Stack.Screen
+          name="Appearance"
+          component={Appearance}
+          options={{
+            headerShown: false,
+            tabBarStyle: {
+              display: 'none',
+            },
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
