@@ -1,88 +1,43 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Button,
   ImageBackground,
-  ScrollView,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
+  Alert,
 } from "react-native";
 import Swiper from "react-native-swiper";
-import { Camera, CameraType } from "expo-camera";
+import { Camera } from "expo-camera";
 import axios from "axios";
-import * as ImagePicker from "expo-image-picker";
+import Loader from "../../components/Loader";
 
-const Detect = ({ navigation }) => {
-  const [active, setActive] = useState(0);
-  const [url, setUrl] = useState("");
-  const [mood, setMood] = useState("");
+function FaceExpression({ navigation }) {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [loader, setLoader] = useState(false);
+  const cameraRef = useRef(null);
+  const [type, setType] = useState(Camera.Constants.Type.front);
 
-  const detectEmotion = async () => {
-    // console.log("Lynn", options);
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    })();
+  }, []);
 
-    await axios
-      .request({
-        method: "POST",
-        url: "https://emotion-detection2.p.rapidapi.com/emotion-detection",
-        headers: {
-          "content-type": "application/json",
-          "X-RapidAPI-Key":
-            "6e3a44137cmshf321fbccc5cb04dp132bf2jsnbb7f3808ab4a",
-          "X-RapidAPI-Host": "emotion-detection2.p.rapidapi.com",
-        },
-        data: `{"url":"${url}"}`,
-      })
-      .then(function (response) {
-        console.log("Lynn", response.data);
-        setMood(response.data[0].emotion.value);
-      })
-      .catch(function (error) {
-        console.error(error);
+  const takePicture = async () => {
+    if (cameraRef.current) {
+      const { uri } = await cameraRef.current.takePictureAsync({
+        quality: 0.5,
+        base64: true,
       });
+
+      setLoader(true);
+
+      uploadImage(uri);
+    }
   };
-
-  const [image, setImage] = useState(null);
-
-  // const pickImage = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
-  //     allowsEditing: true,
-  //     aspect: [4, 3],
-  //     quality: 1,
-  //   });
-
-  //   if (!result.canceled) {
-  //     setImage(result.assets[0].uri);
-
-  //     const url = "https://api.imgbb.com/1/upload";
-  //     const apiKey = "e400225c1aca3fbc13a11be33e2bb24d";
-  //     const expiration = 1000000;
-  //     const headers = {
-  //       "Content-Type": "multipart/form-data",
-  //     };
-
-  //     const formData = new FormData();
-  //     formData.append("key", apiKey);
-  //     formData.append("expiration", expiration);
-  //     formData.append("image", {
-  //       uri: image,
-  //       type: "image/jpeg",
-  //       name: "image.jpg",
-  //     });
-
-  //     await axios
-  //       .post(url, formData, headers)
-  //       .then((response) => {
-  //         console.log("UPLOAD SUCCESS", response.data.data.url);
-  //         setUrl(response.data.data.url);
-  //       })
-  //       .catch((error) => {
-  //         console.log("ERROR", error);
-  //       });
-  //   }
-  // };
 
   const uploadImage = async (imageUri) => {
     const url = "https://api.imgbb.com/1/upload";
@@ -104,44 +59,88 @@ const Detect = ({ navigation }) => {
     try {
       const response = await axios.post(url, formData, headers);
       console.log("UPLOAD SUCCESS", response.data.data.url);
-      setUrl(response.data.data.url);
+      detectEmotions(response.data.data.url);
     } catch (error) {
       console.log("ERROR", error);
     }
   };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  const detectEmotions = async (imageData) => {
+    const headers = {
+      "X-RapidAPI-Key": "6e3a44137cmshf321fbccc5cb04dp132bf2jsnbb7f3808ab4a",
+      "X-RapidAPI-Host": "emotion-detection2.p.rapidapi.com",
+      "Content-Type": "application/json",
+    };
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      await uploadImage(result.assets[0].uri);
+    const data = {
+      url: imageData,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://emotion-detection2.p.rapidapi.com/emotion-detection",
+        data,
+        { headers }
+      );
+      console.log("EMOTIONSS", response.data);
+      setLoader(false);
+      Alert.alert(response.data[0].emotion.value);
+    } catch (error) {
+      setLoader(false);
+      Alert.alert(error);
     }
   };
 
   return (
+    <View style={styles.container}>
+      <Camera type={type} style={styles.camera} ref={cameraRef}>
+        <View style={{ marginTop: 650, alignSelf: "center" }}>
+          <TouchableOpacity
+            onPress={takePicture}
+            style={{
+              width: 75,
+              height: 75,
+              borderRadius: 50,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderWidth: 5,
+              borderColor: "white",
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontFamily: "Poppins_Bold",
+              }}
+            >
+              SCAN
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Camera>
+      {loader && (
+        <View
+          style={{
+            position: "absolute",
+            width: Dimensions.get("screen").width,
+            height: Dimensions.get("screen").height,
+          }}
+        >
+          <Loader />
+        </View>
+      )}
+    </View>
+  );
+}
+
+const Detect = ({ navigation }) => {
+  const [active, setActive] = useState(0);
+
+  return (
     <>
       {active === 1 ? (
-        <View
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
-          <Button title="Pick an image from camera roll" onPress={pickImage} />
-          {image && (
-            <Image
-              source={{ uri: image }}
-              style={{ width: 200, height: 200 }}
-            />
-          )}
-
-          <Button title="Test" onPress={detectEmotion} />
-
-          {mood && <Text>You are {mood}</Text>}
-        </View>
+        <FaceExpression />
       ) : (
         <ImageBackground
           source={require("../../assets/Bg.png")}
@@ -245,4 +244,14 @@ const Detect = ({ navigation }) => {
 
 export default Detect;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "black",
+  },
+  camera: {
+    height: Dimensions.get("screen").height,
+    width: Dimensions.get("screen").width,
+  },
+});
