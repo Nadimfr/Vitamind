@@ -1,69 +1,86 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
-import Header from '../../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Header from '../../components/Header';
 
-const Appearance = () => {
+const Appearance = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState('light');
+
   const toggleSwitch = async () => {
     setIsEnabled((previousState) => !previousState);
-    try {
-      await AsyncStorage.setItem('Dark', isEnabled ? 'd' : 'l');
-    } catch (error) {
-      console.error('Error saving dark mode value: ', error);
-    }
-  };
-
-  const getDarkMode = async () => {
-    try {
-      const darkModeValue = await AsyncStorage.getItem('Dark');
-      const parsedValue = JSON.parse(darkModeValue);
-
-      // Check if parsedValue is not a boolean value
-      if (typeof parsedValue !== 'boolean') {
-        throw new Error('Value is not a boolean');
-      }
-
-      return parsedValue;
-    } catch (error) {
-      console.error('Error retrieving dark mode value: ', error);
-    }
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    setCurrentTheme(newTheme);
+    AsyncStorage.setItem('theme', newTheme);
   };
 
   useEffect(() => {
-    getDarkMode().then((value) => {
-      if (value !== null) {
-        setIsDarkModeEnabled(value);
+    AsyncStorage.getItem('theme').then((theme) => {
+      console.log(theme);
+      if (theme) {
+        setCurrentTheme(theme);
       }
     });
-  }, [isDarkModeEnabled]);
+  }, [currentTheme]);
 
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: isEnabled ? '#142F21' : 'white',
+        backgroundColor: currentTheme == 'dark' ? '#142F21' : 'white',
       }}
     >
-      <Header
-        dots
-        screenName="Appearance"
-        onBack={() => navigation.navigate('Home')}
-      />
+      <View style={styles.Header}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Ionicons
+            name="chevron-back"
+            color={currentTheme == 'dark' ? 'white' : 'black'}
+            size={25}
+          />
+        </TouchableOpacity>
+
+        <Text
+          style={[
+            styles.Title,
+            {
+              color: currentTheme == 'dark' ? 'white' : 'black',
+            },
+          ]}
+        >
+          Apperance
+        </Text>
+
+        <TouchableOpacity>
+          <Entypo
+            name="dots-three-horizontal"
+            color={currentTheme == 'dark' ? 'white' : 'black'}
+            size={20}
+          />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.Layout}>
-        <Text style={styles.Title}>Dark Mode</Text>
+        <Text
+          style={{
+            fontFamily: 'Poppins_SemiBold',
+            fontSize: 20,
+            color: currentTheme == 'dark' ? 'white' : 'black',
+          }}
+        >
+          Dark Mode
+        </Text>
         <Switch
           trackColor={{
             false: 'rgba(178 236 196 / 0.4)',
             true: 'rgba(178 236 196 / 0.4)',
           }}
-          thumbColor={isEnabled ? '#42A45C' : '#B2ECC4'}
+          thumbColor={currentTheme == 'dark' ? '#42A45C' : '#B2ECC4'}
           ios_backgroundColor="#fff"
           onValueChange={toggleSwitch}
           on
-          value={isEnabled}
+          value={currentTheme == 'dark' && true}
         />
       </View>
     </View>
@@ -84,5 +101,20 @@ const styles = StyleSheet.create({
   Title: {
     fontFamily: 'Poppins_SemiBold',
     fontSize: 20,
+  },
+  Header: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 30,
+    paddingHorizontal: 25,
+    marginTop: '15%',
+  },
+  Title: {
+    fontSize: 20,
+    fontWeight: '500',
+    fontFamily: 'Poppins_SemiBold',
+    textAlign: 'center',
   },
 });

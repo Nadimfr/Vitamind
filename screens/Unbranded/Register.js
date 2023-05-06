@@ -1,38 +1,55 @@
-import { LinearGradient } from "expo-linear-gradient";
-import React, { useContext, useState } from "react";
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useCallback, useContext, useState } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import Button from "../../components/Button";
-import TextField from "../../components/TextField";
-import * as Animatable from "react-native-animatable";
+} from 'react-native';
+import Button from '../../components/Button';
+import TextField from '../../components/TextField';
+import * as Animatable from 'react-native-animatable';
+import * as api from '../../controllers/ApiUser';
 
-function Register() {
+function Register({ navigation }) {
   const [user, setUser] = useState({
-    email: "",
-    password: "",
-    fullname: "",
-    confirmpassword: "",
+    email: '',
+    password: '',
+    username: '',
+    image_url: '',
+    verificationCode: null,
   });
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleCode = useCallback(async (email) => {
+    setLoading(true);
+
+    await api.VerificationCodeReception(email).then((res) => {
+      navigation.navigate('Verify', {
+        user: {
+          ...user,
+          verificationCode: res,
+        },
+      });
+      setLoading(false);
+    });
+  });
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <KeyboardAvoidingView behavior="position">
-        <Text style={[styles.text, { color: "#142F21" }]}>Welcome to</Text>
+        <Text style={[styles.text, { color: '#142F21' }]}>Welcome to</Text>
         <Text
           style={[
             styles.text,
             {
               marginTop: -5,
-              fontFamily: "Poppins_SemiBold",
-              color: "#42A45C",
+              fontFamily: 'Poppins_SemiBold',
+              color: '#42A45C',
               marginBottom: 50,
             },
           ]}
@@ -41,10 +58,10 @@ function Register() {
         </Text>
         <View style={{ marginBottom: 10 }}>
           <TextField
-            label="Full Name"
-            placeholder="Enter your full name"
-            value={user.fullname}
-            onChange={(text) => setUser({ ...user, fullname: text })}
+            label="Username"
+            placeholder="Enter your username"
+            value={user.username}
+            onChange={(text) => setUser({ ...user, username: text })}
           />
         </View>
         <View style={{ marginBottom: 10 }}>
@@ -64,12 +81,12 @@ function Register() {
             onChange={(text) => setUser({ ...user, password: text })}
           />
         </View>
-        <Animatable.View
+        {/* <Animatable.View
           style={{ marginBottom: 10 }}
           animation={
             user.confirmpassword.length > 0 &&
             user.confirmpassword !== user.password
-              ? "shake"
+              ? 'shake'
               : null
           }
         >
@@ -81,7 +98,7 @@ function Register() {
             secureTextEntry
             onChangeText={setConfirmPassword}
           />
-        </Animatable.View>
+        </Animatable.View> */}
 
         <View
           style={{
@@ -90,7 +107,7 @@ function Register() {
           }}
         >
           <Button
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => handleCode(user.email)}
             title="Register"
             disabled={(!user.email || !user.password) && true}
           />
@@ -100,12 +117,12 @@ function Register() {
           <Text style={styles.text1}>Are you a member? </Text>
           <TouchableOpacity
             activeOpacity={0.5}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate('Login')}
           >
             <Text
               style={[
                 styles.text1,
-                { fontFamily: "Poppins_SemiBold", color: "#42A45C" },
+                { fontFamily: 'Poppins_SemiBold', color: '#42A45C' },
               ]}
             >
               Login
@@ -123,31 +140,31 @@ export default Register;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "start",
-    paddingHorizontal: "7%",
+    backgroundColor: '#fff',
+    justifyContent: 'start',
+    paddingHorizontal: '7%',
     paddingTop: 100,
   },
   text: {
     fontSize: 42,
-    fontFamily: "Poppins",
-    textAlign: "left",
+    fontFamily: 'Poppins',
+    textAlign: 'left',
   },
   register: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   text1: {
-    fontFamily: "Lato",
+    fontFamily: 'Lato',
     fontSize: 14,
-    color: "#9E9C9B",
+    color: '#9E9C9B',
   },
   leftLine: {
     height: 2,
-    width: "32%",
+    width: '32%',
     marginHorizontal: 5,
   },
 });

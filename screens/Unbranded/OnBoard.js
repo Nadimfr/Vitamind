@@ -1,109 +1,58 @@
 import axios from 'axios';
 import { Audio } from 'expo-av';
 import React, { useEffect, useRef } from 'react';
-import { ImageBackground, View, Text, TouchableOpacity } from 'react-native';
-import * as FileSystem from 'expo-file-system';
+import {
+  ImageBackground,
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
+import Swiper from 'react-native-swiper';
 
 function OnBoard({ navigation }) {
-  const sound = new Audio.Sound();
-
-  async function playSound() {
-    try {
-      await sound.unloadAsync();
-      await sound.loadAsync(require('../../assets/sounds/Press.mp3'));
-      await sound.playAsync();
-    } catch (error) {
-      // handle errors here
-    }
-  }
-
   const swiperRef = useRef(null);
 
   const handleNextPress = () => {
-    playSound();
     swiperRef.current.scrollBy(1, true);
   };
 
-  // const text = `Change the way you think with tools that allows you to track your mood, manage negative thoughts, and see your progress.`;
-
-  // const url = 'https://large-text-to-speech.p.rapidapi.com/tts';
-
-  // const payload = {
-  //   text: text,
-  // };
-
-  // const headers = {
-  //   'content-type': 'application/json',
-  //   'x-rapidapi-host': 'large-text-to-speech.p.rapidapi.com',
-  //   'x-rapidapi-key': '6e3a44137cmshf321fbccc5cb04dp132bf2jsnbb7f3808ab4a',
-  // };
-
-  // POST request
-  // useEffect(() => {
-  //   axios
-  //     .post(url, payload, { headers })
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       // get id and eta of the job from the response
-  //       const id = response.data.id;
-  //       const eta = response.data.eta;
-  //       console.log(`Waiting ${eta} seconds for the job to finish...`);
-  //       // wait for the job to finish
-  //       setTimeout(() => {
-  //         // GET the result from the API
-  //         axios
-  //           .get(url, { headers, params: { id: id } })
-  //           .then((response) => {
-  //             // if url not returned yet, wait and try again
-  //             let url;
-  //             while (!url) {
-  //               if ('url' in response.data) {
-  //                 url = response.data.url;
-  //               } else {
-  //                 setTimeout(() => {
-  //                   axios
-  //                     .get(url, { headers, params: { id: id } })
-  //                     .then((response) => {
-  //                       console.log(response.data);
-  //                     })
-  //                     .catch((error) => {
-  //                       console.error(error);
-  //                     });
-  //                 }, 5000);
-  //               }
-  //             }
-  //             // download the audio file
-  //             FileSystem.downloadAsync(
-  //               url,
-  //               FileSystem.documentDirectory + 'output.wav'
-  //             )
-  //               .then(({ uri }) => {
-  //                 console.log('File output.wav saved!');
-  //                 // play the audio file
-  //                 const soundObject = new Audio.Sound();
-  //                 soundObject
-  //                   .loadAsync({ uri })
-  //                   .then(() => {
-  //                     soundObject.playAsync();
-  //                   })
-  //                   .catch((error) => {
-  //                     console.error(error);
-  //                   });
-  //               })
-  //               .catch((error) => {
-  //                 console.error(error);
-  //               });
-  //           })
-  //           .catch((error) => {
-  //             console.error(error);
-  //           });
-  //       }, eta * 1000);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
-
+  const array = [
+    {
+      title: 'Vitamind',
+      description: 'A place to free your mind',
+      button: 'Next',
+      function: handleNextPress,
+    },
+    {
+      title: 'Tools that work',
+      description:
+        'Change the way you think with tools that allows you to track your mood, manage negative thoughts, and see your progress',
+      button: 'Next',
+      function: handleNextPress,
+    },
+    {
+      title: 'Every Guided Journey',
+      description:
+        'Our guided journeys are designed by psychologists to help you build and maintain skills and increase on-the-go activities',
+      button: 'Next',
+      function: handleNextPress,
+    },
+    {
+      title: 'Mental Health Coaching',
+      description:
+        'Trained doctors are ready to offer support and guidance based on what works for you all through private meeting',
+      button: 'Next',
+      function: handleNextPress,
+    },
+    {
+      title: 'Personal Journal',
+      description:
+        'This app is about you and only you, a place to feel free to write your own thoughts and be sure that is a safe place to keep it',
+      button: 'Next',
+      function: () => navigation.navigate('Login'),
+    },
+  ];
   return (
     <>
       <ImageBackground
@@ -114,184 +63,80 @@ function OnBoard({ navigation }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          paddingHorizontal: 30,
+          paddingTop: Dimensions.get('screen').height / 3,
         }}
       >
-        {/* <Swiper
+        <Swiper
           ref={swiperRef}
-          dotColor="white"
-          activeDotColor="green"
-          showsButtons={false}
           loop={false}
-          style={{ alignSelf: 'center', height: 260 }}
+          style={{ alignSelf: 'center' }}
+          dotStyle={{ display: 'none' }}
+          activeDotStyle={{ display: 'none' }}
           scrollEnabled={false}
-        > */}
-        <View
-          style={{
-            width: 310,
-            height: 260,
-            backgroundColor: 'rgba(178, 236, 196, 0.5)',
-            borderRadius: 50,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
         >
-          <Text
-            style={{
-              fontFamily: 'Poppins_SemiBold',
-              color: '#142F21',
-              fontSize: 50,
-              marginTop: 0,
-              lineHeight: 60,
-              textAlign: 'center',
-            }}
-          >
-            Tools that work
-          </Text>
-          <Text
-            style={{
-              fontFamily: 'Lato',
-              color: 'white',
-              fontSize: 22,
-              marginTop: 0,
-              lineHeight: 0,
-              textAlign: 'center',
-            }}
-          >
-            Change the way you think with tools that allows you to track your
-            mood, manage negative thoughts, and see your progress
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              playSound();
-              navigation.navigate('Login');
-            }}
-          >
-            {/* <TouchableOpacity onPress={handleNextPress}> */}
-            <Text>Next</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* <View
-            style={{
-              width: 310,
-              height: 260,
-              backgroundColor: 'rgba(178, 236, 196, 0.5)',
-              borderRadius: 50,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Text
+          {array.map((a, idx) => (
+            <View
               style={{
-                fontFamily: 'Poppins_SemiBold',
-                color: '#142F21',
-                fontSize: 50,
-                marginTop: 0,
-                lineHeight: 60,
-                textAlign: 'center',
-              }}
-            >
-              Vitamind
-            </Text>
-            <Text
-              style={{
-                fontFamily: 'Lato',
-                color: 'white',
-                fontSize: 22,
-                marginTop: 0,
-                lineHeight: 0,
-                textAlign: 'center',
-              }}
-            >
-              A place to free your mind
-            </Text>
-
-            <TouchableOpacity
-              style={{
+                backgroundColor: 'rgba(178, 236, 196, 0.5)',
                 borderRadius: 50,
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: '#142F21',
                 justifyContent: 'center',
-                width: 85,
-                height: 36,
-                marginTop: 40,
+                // paddingVertical: 25,
+                paddingHorizontal: 20,
+                height: 300,
               }}
-              onPress={handleNextPress}
             >
               <Text
                 style={{
-                  color: 'white',
-                  fontFamily: 'Poppins_Medium',
+                  fontFamily: 'Poppins_SemiBold',
+                  color: '#142F21',
+                  fontSize: 34,
+                  marginTop: 0,
+                  textAlign: 'center',
                 }}
               >
-                Next
+                {a.title}
               </Text>
-            </TouchableOpacity>
-          </View>
+              <Text
+                style={{
+                  fontFamily: 'Lato',
+                  color: 'white',
+                  fontSize: 18,
+                  marginTop: 0,
+                  lineHeight: 0,
+                  textAlign: 'center',
+                }}
+              >
+                {a.description}
+              </Text>
 
-          <View
-            style={{
-              width: 310,
-              height: 260,
-              backgroundColor: 'rgba(178, 236, 196, 0.5)',
-              borderRadius: 50,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: 'Poppins_SemiBold',
-                color: '#142F21',
-                fontSize: 50,
-                marginTop: 0,
-                lineHeight: 60,
-                textAlign: 'center',
-              }}
-            >
-              Tools that work
-            </Text>
-            <Text
-              style={{
-                fontFamily: 'Lato',
-                color: 'white',
-                fontSize: 22,
-                marginTop: 0,
-                lineHeight: 0,
-                textAlign: 'center',
-              }}
-            >
-              Change the way you think with tools that allows you to track your
-              mood, manage negative thoughts, and see your progress
-            </Text>
-            <TouchableOpacity
-              style={{
-                borderRadius: 50,
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: '#142F21',
-                justifyContent: 'center',
-                width: 85,
-                height: 36,
-                marginTop: 40,
-              }}
-              onPress={handleNextPress}
-            >
-              <Text
+              <TouchableOpacity
                 style={{
-                  color: 'white',
-                  fontFamily: 'Poppins_Medium',
+                  borderRadius: 50,
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: '#142F21',
+                  justifyContent: 'center',
+                  width: 85,
+                  height: 36,
+                  marginTop: 40,
                 }}
+                onPress={a.function}
               >
-                Next
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Swiper> */}
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'Poppins_Medium',
+                  }}
+                >
+                  {a.button}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </Swiper>
       </ImageBackground>
     </>
   );

@@ -1,7 +1,12 @@
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import React from 'react';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 
-const Button = ({ title, disabled, onPress }) => {
+const Button = ({ title, disabled, onPress, loading }) => {
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -14,7 +19,11 @@ const Button = ({ title, disabled, onPress }) => {
         },
       ]}
     >
-      <Text style={styles.text}>{title}</Text>
+      {!loading ? (
+        <Text style={styles.text}>{title}</Text>
+      ) : (
+        <ActivityIndicator color="white" size="small" />
+      )}
     </TouchableOpacity>
   );
 };
@@ -23,16 +32,16 @@ export default Button;
 
 const styles = StyleSheet.create({
   button: {
-    width: "100%",
+    width: '100%',
     borderWidth: 2,
-    borderColor: "#142F21",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    borderColor: '#142F21',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 10,
     borderRadius: 30,
-    backgroundColor: "#142F21",
-    shadowColor: "#000",
+    backgroundColor: '#142F21',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 1,
@@ -40,8 +49,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    fontFamily: "Poppins",
-    textAlign: "left",
-    color: "white",
+    fontFamily: 'Poppins',
+    textAlign: 'left',
+    color: 'white',
   },
 });

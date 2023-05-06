@@ -1,32 +1,35 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ImageBackground, TouchableOpacity, View } from 'react-native';
 
-const Doctor = ({ online }) => {
+const Doctor = ({ online, image, onPress }) => {
   return (
-    <View
-      style={{
-        height: 75,
-        width: 75,
-        borderRadius: 50,
-        backgroundColor: 'red',
-        position: 'relative',
-        marginRight: 10,
-      }}
-    >
-      {online && (
-        <View
-          style={{
-            height: 13,
-            width: 13,
-            borderRadius: 50,
-            backgroundColor: '#42A45C',
-            position: 'absolute',
-            bottom: 0,
-            right: 10,
-          }}
-        />
-      )}
-    </View>
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+      <ImageBackground
+        style={{
+          height: 75,
+          width: 75,
+          position: 'relative',
+          marginRight: 10,
+        }}
+        imageStyle={{ borderRadius: 50 }}
+        src={`${image}`}
+        resizeMode="cover"
+      >
+        {online && (
+          <View
+            style={{
+              height: 13,
+              width: 13,
+              borderRadius: 50,
+              backgroundColor: '#42A45C',
+              position: 'absolute',
+              bottom: 0,
+              right: 10,
+            }}
+          />
+        )}
+      </ImageBackground>
+    </TouchableOpacity>
   );
 };
 

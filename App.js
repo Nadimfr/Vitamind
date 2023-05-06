@@ -13,6 +13,10 @@ import Profile from './screens/Branded/Profile';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Appearance from './screens/Branded/Appearance';
+import Settings from './screens/Branded/Settings';
+import OnBoard from './screens/Unbranded/OnBoard';
+import DoctorDetails from './screens/Branded/DoctorDetails';
+import Verify from './screens/Unbranded/Verify';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -54,6 +58,7 @@ function LoggedInTabs() {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="circle-outline" size={26} />
           ),
+          tabBarStyle: { display: 'none' },
           headerShown: false,
         }}
       />
@@ -87,6 +92,7 @@ function LoggedInTabs() {
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState('');
+  const [user, setUser] = useState();
   let [fontsLoaded] = useFonts({
     Poppins: require('./assets/fonts/Poppins.ttf'),
     Poppins_SemiBold: require('./assets/fonts/Poppins-SemiBold.ttf'),
@@ -109,6 +115,21 @@ function App() {
     }
   };
 
+  const getUser = async () => {
+    try {
+      const user = await AsyncStorage.getItem('user');
+      setUser(user);
+      return user;
+    } catch (error) {
+      console.log('Error getting user:', error);
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+    console.log('WHos MY USER => ', user);
+  }, [user]);
+
   if (!fontsLoaded) {
     return <AppLoading />;
   }
@@ -116,30 +137,56 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {!token && (
-          <>
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{
-                headerShown: false,
-                tabBarStyle: {
-                  display: 'none',
-                },
-              }}
-            />
-            <Stack.Screen
-              name="Register"
-              component={Register}
-              options={{
-                headerShown: false,
-                tabBarStyle: {
-                  display: 'none',
-                },
-              }}
-            />
-          </>
+        {!user && (
+          <Stack.Screen
+            name="Onboard"
+            component={OnBoard}
+            options={{
+              headerShown: false,
+              tabBarStyle: {
+                display: 'none',
+              },
+            }}
+          />
         )}
+        {!token && (
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerShown: false,
+              tabBarStyle: {
+                display: 'none',
+              },
+            }}
+          />
+        )}
+
+        {!token && (
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{
+              headerShown: false,
+              tabBarStyle: {
+                display: 'none',
+              },
+            }}
+          />
+        )}
+        {!token && (
+          <Stack.Screen
+            name="Verify"
+            component={Verify}
+            options={{
+              headerShown: false,
+              tabBarStyle: {
+                display: 'none',
+              },
+            }}
+          />
+        )}
+
         <Stack.Screen
           name="Home"
           component={LoggedInTabs}
@@ -158,6 +205,24 @@ function App() {
             tabBarStyle: {
               display: 'none',
             },
+          }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            headerShown: false,
+            tabBarStyle: {
+              display: 'none',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="DoctorDetailed"
+          component={DoctorDetails}
+          options={{
+            headerShown: false,
+            tabBarStyle: {},
           }}
         />
       </Stack.Navigator>

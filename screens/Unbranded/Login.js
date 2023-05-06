@@ -19,8 +19,11 @@ function Login({ navigation }) {
 
   const handleLogin = (userInfo) => {
     setLoading(true);
+    console.log('USER', userInfo);
     api.userLogin(userInfo).then((res) => {
+      console.log('first', res);
       storeData('token', res.token);
+      storeData('user', res);
       navigation.navigate('Home');
       setLoading(false);
     });
@@ -80,6 +83,7 @@ function Login({ navigation }) {
             onPress={() => handleLogin(user)}
             title="Login"
             disabled={(!user.email || !user.password) && true}
+            loading={loading}
           />
         </View>
 
@@ -122,6 +126,51 @@ function Login({ navigation }) {
             colors={['transparent', '#42A45C']}
             style={styles.leftLine}
           />
+        </View>
+
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+            marginTop: 25,
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              height: 60,
+              width: 60,
+              borderRadius: 50,
+              backgroundColor: 'red',
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 3 },
+              shadowOpacity: 0.1,
+              shadowRadius: 1,
+            }}
+          >
+            <Text>FB</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              height: 60,
+              width: 60,
+              borderRadius: 50,
+              backgroundColor: 'red',
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 3 },
+              shadowOpacity: 0.1,
+              shadowRadius: 1,
+            }}
+          >
+            <Text>Ggl</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </View>

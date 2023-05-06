@@ -13,19 +13,18 @@ import MotivationalQuote from '../../components/MotivationalQuote';
 import { createClient } from 'pexels';
 import Doctor from '../../components/Doctor';
 import Chart from '../../components/Chart';
-import { removeKey } from '../../helpers/AsyncStorage';
+import { clearAll, removeKey } from '../../helpers/AsyncStorage';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as apiDr from '../../controllers/ApiDoctor';
+import Popup from '../../components/Popup';
 
 function Home({ navigation }) {
   const [quote, setQuote] = useState('');
   const [image, setImage] = useState('');
-  const drs = [
-    { online: true },
-    { online: false },
-    { online: true },
-    { online: true },
-    { online: true },
-  ];
+  const [token, setToken] = useState('');
+  const [doctors, setDoctors] = useState([]);
+
   const client = createClient(
     'SQsOlDuKv74Jy3iwJOvik5rtkIT0STF9IJMykd57nxvDQLlefNbYyCTl'
   );
@@ -58,17 +57,55 @@ function Home({ navigation }) {
     // fetchQuote();
   }, []);
 
+  useEffect(() => {
+    async function fetchToken() {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        setToken(token);
+      } catch (error) {
+        console.log('Error fetching token:', error);
+      }
+    }
+
+    fetchToken();
+  }, [token]);
+
   const removeToken = async () => {
     try {
-      await removeKey('token');
+      await clearAll();
+      await setToken(''); // Wait for the state to be updated
       navigation.navigate('Login');
     } catch (error) {
       console.log('Error removing token:', error);
     }
   };
 
+  const [currentTheme, setCurrentTheme] = useState('light');
+
+  useEffect(() => {
+    AsyncStorage.getItem('theme').then((theme) => {
+      console.log(theme);
+      if (theme) {
+        setCurrentTheme(theme);
+      }
+    });
+  }, [currentTheme]);
+
+  useEffect(() => {
+    apiDr.getDoctors().then((res) => {
+      setDoctors(res);
+    });
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: currentTheme == 'dark' ? '#000' : '#fff',
+        },
+      ]}
+    >
       <Header screenName="Home" />
 
       <TouchableOpacity onPress={removeToken} style={{ marginBottom: 20 }}>
@@ -85,6 +122,7 @@ function Home({ navigation }) {
           alignItems: 'flex-start',
           justifyContent: 'space-between',
           width: Dimensions.get('screen').width,
+          marginBottom: 10,
         }}
       >
         <Text
@@ -107,12 +145,20 @@ function Home({ navigation }) {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={{
-          marginTop: 10,
           paddingHorizontal: 20,
         }}
       >
-        {drs.map((d, idx) => (
-          <Doctor key={idx} online={d.online} />
+        {doctors.map((d, idx) => (
+          <Doctor
+            key={idx}
+            online={d.status}
+            image={d.image_url}
+            onPress={() =>
+              navigation.navigate('DoctorDetailed', {
+                id: d._id,
+              })
+            }
+          />
         ))}
       </ScrollView>
 
@@ -144,7 +190,6 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
   },
   text: {

@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  StatusBar,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../components/Header';
 import * as api from '../../controllers/ApiUser';
-import { Appearance, useColorScheme } from 'react-native';
 import { Audio } from 'expo-av';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getData } from '../../helpers/AsyncStorage';
 
-function Profile() {
+function Profile({}) {
   const navigation = useNavigation();
 
   const options = [
     {
       Title: 'Settings',
       Icon: <MaterialCommunityIcons name="account" size={26} />,
-      onPress: () => Appearance.addChangeListener,
+      onPress: () => navigation.navigate('Settings'),
     },
     {
       Title: 'Dashboard',
@@ -40,7 +34,8 @@ function Profile() {
     },
   ];
 
-  const [user, setUser] = useState({});
+  const [userId, setUserId] = useState('');
+  const [user, setUser] = useState();
 
   const sound = new Audio.Sound();
 
@@ -54,17 +49,62 @@ function Profile() {
     }
   }
 
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const user = await AsyncStorage.getItem('user');
+  //     setUserId(user);
+  //   }
+
+  //   fetchData();
+
+  //   api.getUserDetails(userId).then((res) => {
+  //     console.log('RESULT ??', res);
+  //   });
+  // }, []);
+
   useEffect(() => {
-    api.getUserDetails().then((res) => {
-      setUser(res[0]);
-      console.log('first', res);
-    });
+    async function fetchData() {
+      const user = await AsyncStorage.getItem('user');
+      setUserId(user);
+
+      const userDetails = await api.getUserDetails(user);
+      console.log('RESULT ??', userDetails);
+    }
+
+    fetchData();
+  }, []);
+
+  // useEffect(() => {
+  //   async function getData(uid) {
+  //     await api.getUserDetails(uid).then((res) => {
+  //       console.log('RESULT ??', res);
+  //     });
+  //   }
+
+  //   getData(userId);
+  // }, [userId]);
+
+  const [theme, setTheme] = useState('');
+
+  useEffect(() => {
+    async function getTheme() {
+      const storedTheme = await AsyncStorage.getItem('theme');
+      if (storedTheme) {
+        setTheme(storedTheme);
+      }
+    }
+    getTheme();
   }, []);
 
   return (
-    <View style={styles.profile1}>
-      <StatusBar barStyle="light-content" />
-
+    <View
+      style={[
+        styles.profile1,
+        {
+          backgroundColor: theme == 'dark' ? 'blue' : 'white',
+        },
+      ]}
+    >
       <Header
         dots
         screenName="Profile"
@@ -74,11 +114,9 @@ function Profile() {
         <Image
           style={styles.image}
           src={`${user?.image_url}`}
-          resizeMode="center"
+          resizeMode="cover"
         />
-        <Text style={styles.name}>
-          {user?.first_name} {user?.last_name}
-        </Text>
+        <Text style={styles.name}>{user?.email}</Text>
         <Text style={styles.username}>@{user?.username}</Text>
       </View>
       <View style={styles.options}>
@@ -115,7 +153,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profile1: {
-    backgroundColor: 'white',
     flex: 1,
   },
   name: {
