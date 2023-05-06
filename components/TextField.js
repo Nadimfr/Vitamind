@@ -1,13 +1,20 @@
-import React from "react";
-import { View, StyleSheet, TextInput, Text } from "react-native";
+import React from 'react';
+import { View, StyleSheet, TextInput, Text } from 'react-native';
 
-const TextField = ({ label, placeholder, value, password, onChange }) => {
+const TextField = ({
+  label,
+  placeholder,
+  value,
+  password,
+  onChange,
+  inputStyle,
+}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
         value={value}
-        style={styles.input}
+        style={[styles.input, inputStyle]}
         placeholder={placeholder}
         secureTextEntry={password && true}
         onChangeText={onChange}
@@ -20,12 +27,12 @@ export default TextField;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
   },
   label: {
-    color: "#142F21",
+    color: '#142F21',
     fontSize: 16,
-    fontFamily: "Lato",
+    fontFamily: 'Lato',
     marginLeft: 20,
   },
   input: {
@@ -34,6 +41,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: "#142F21",
+    borderColor: '#142F21',
   },
 });

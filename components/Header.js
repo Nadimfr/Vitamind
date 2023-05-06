@@ -20,7 +20,7 @@ function Header({ dots, screenName, onBack }) {
     <>
       {dots ? (
         <View style={styles.Header}>
-          <TouchableOpacity onPress={onBack}>
+          <TouchableOpacity style={{ width: '33.33%' }} onPress={onBack}>
             <Ionicons
               name="chevron-back"
               color={appTheme == 'dark' ? 'white' : 'black'}
@@ -39,13 +39,7 @@ function Header({ dots, screenName, onBack }) {
             {screenName}
           </Text>
 
-          <TouchableOpacity>
-            <Entypo
-              name="dots-three-horizontal"
-              color={appTheme == 'dark' ? 'white' : 'black'}
-              size={20}
-            />
-          </TouchableOpacity>
+          <View style={{ width: '33.33%' }} />
         </View>
       ) : (
         <View style={styles.Header1}>
@@ -85,6 +79,7 @@ const styles = StyleSheet.create({
     marginTop: '15%',
   },
   Title: {
+    width: '33.33%',
     fontSize: 20,
     fontWeight: '500',
     fontFamily: 'Poppins_SemiBold',

@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useContext, useState } from 'react';
 import {
+  Image,
   KeyboardAvoidingView,
   StatusBar,
   StyleSheet,
@@ -143,16 +144,26 @@ function Login({ navigation }) {
               height: 60,
               width: 60,
               borderRadius: 50,
-              backgroundColor: 'red',
+              backgroundColor: 'white',
               alignItems: 'center',
               justifyContent: 'center',
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 3 },
-              shadowOpacity: 0.1,
+              shadowOffset: { width: 0, height: 0.5 },
+              shadowOpacity: 0.25,
               shadowRadius: 1,
             }}
           >
-            <Text>FB</Text>
+            <Image
+              resizeMode="cover"
+              source={require('../../assets/fb.png')}
+              style={{
+                height: 60,
+                width: 60,
+                backgroundColor: 'white',
+                borderRadius: 50,
+                alignSelf: 'center',
+              }}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -160,16 +171,26 @@ function Login({ navigation }) {
               height: 60,
               width: 60,
               borderRadius: 50,
-              backgroundColor: 'red',
+              backgroundColor: 'white',
               alignItems: 'center',
               justifyContent: 'center',
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 3 },
-              shadowOpacity: 0.1,
+              shadowOffset: { width: 0, height: 0.5 },
+              shadowOpacity: 0.25,
               shadowRadius: 1,
             }}
           >
-            <Text>Ggl</Text>
+            <Image
+              resizeMode="cover"
+              source={require('../../assets/google.png')}
+              style={{
+                height: 30,
+                width: 30,
+                backgroundColor: 'white',
+                borderRadius: 50,
+                alignSelf: 'center',
+              }}
+            />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

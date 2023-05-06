@@ -6,10 +6,10 @@ import * as api from '../../controllers/ApiUser';
 import { Audio } from 'expo-av';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getData } from '../../helpers/AsyncStorage';
+import { clearAll, getData } from '../../helpers/AsyncStorage';
 
-function Profile({}) {
-  const navigation = useNavigation();
+function Profile({ navigation }) {
+  // const navigation = useNavigation();
 
   const options = [
     {
@@ -27,15 +27,39 @@ function Profile({}) {
       Icon: <MaterialCommunityIcons name="account" size={26} />,
       onPress: () => navigation.navigate('Appearance'),
     },
-    {
-      Title: 'Logout',
-      Icon: <MaterialCommunityIcons name="account" size={26} />,
-      onPress: '',
-    },
+    // {
+    //   Title: 'Logout',
+    //   Icon: <MaterialCommunityIcons name="account" size={26} />,
+    //   onPress: removeToken,
+    // },
   ];
+
+  const removeToken = async () => {
+    try {
+      await clearAll();
+      await setToken(''); // Wait for the state to be updated
+      navigation.navigate('Login');
+    } catch (error) {
+      console.log('Error removing token:', error);
+    }
+  };
 
   const [userId, setUserId] = useState('');
   const [user, setUser] = useState();
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    async function fetchToken() {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        console.log('TOKEN', token);
+        setToken(token);
+      } catch (error) {
+        console.log('Error fetching token:', error);
+      }
+    }
+    fetchToken();
+  }, [token]);
 
   const sound = new Audio.Sound();
 
@@ -140,6 +164,26 @@ function Profile({}) {
             />
           </View>
         ))}
+        <View style={{ marginBottom: 25 }}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.option}
+            onPress={removeToken}
+          >
+            <View>
+              <MaterialCommunityIcons name="account" size={26} />
+            </View>
+            <Text style={styles.optionstitle}>Log Out</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              height: 1,
+              width: '100%',
+              backgroundColor: '#42A45C',
+              marginTop: 10,
+            }}
+          />
+        </View>
       </View>
     </View>
   );

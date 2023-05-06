@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
+  Modal,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -18,17 +19,26 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as apiDr from '../../controllers/ApiDoctor';
 import Popup from '../../components/Popup';
+import axios from 'axios';
+import MoodEveryday from '../../components/MoodEveryday';
 
 function Home({ navigation }) {
   const [quote, setQuote] = useState('');
   const [image, setImage] = useState('');
   const [token, setToken] = useState('');
   const [doctors, setDoctors] = useState([]);
+  const [dailyMood, setDailyMood] = useState(false);
 
   const client = createClient(
     'SQsOlDuKv74Jy3iwJOvik5rtkIT0STF9IJMykd57nxvDQLlefNbYyCTl'
   );
-  const query = 'Nature';
+  const query = 'Mind';
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDailyMood(true);
+    }, 5000);
+  }, [dailyMood]);
 
   useEffect(() => {
     client.photos.search({ query, per_page: 1 }).then((photos) => {
@@ -70,16 +80,6 @@ function Home({ navigation }) {
     fetchToken();
   }, [token]);
 
-  const removeToken = async () => {
-    try {
-      await clearAll();
-      await setToken(''); // Wait for the state to be updated
-      navigation.navigate('Login');
-    } catch (error) {
-      console.log('Error removing token:', error);
-    }
-  };
-
   const [currentTheme, setCurrentTheme] = useState('light');
 
   useEffect(() => {
@@ -95,7 +95,7 @@ function Home({ navigation }) {
     apiDr.getDoctors().then((res) => {
       setDoctors(res);
     });
-  }, []);
+  }, [doctors]);
 
   return (
     <View
@@ -106,11 +106,13 @@ function Home({ navigation }) {
         },
       ]}
     >
-      <Header screenName="Home" />
+      {dailyMood && (
+        <Modal visible>
+          <MoodEveryday />
+        </Modal>
+      )}
 
-      <TouchableOpacity onPress={removeToken} style={{ marginBottom: 20 }}>
-        <Text>LOGOUT</Text>
-      </TouchableOpacity>
+      <Header screenName="Home" />
 
       <MotivationalQuote Quote={quote} Image={image} />
 

@@ -63,12 +63,12 @@ function LoggedInTabs() {
         }}
       />
       <Tab.Screen
-        name="Doctors"
+        name="History"
         component={Home}
         options={{
-          tabBarLabel: 'Doctors',
+          tabBarLabel: 'History',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="doctor" size={26} />
+            <MaterialCommunityIcons name="history" size={26} />
           ),
           headerShown: false,
         }}
@@ -136,7 +136,11 @@ function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          gestureEnabled: false,
+        }}
+      >
         {!user && (
           <Stack.Screen
             name="Onboard"
@@ -149,6 +153,7 @@ function App() {
             }}
           />
         )}
+
         {!token && (
           <Stack.Screen
             name="Login"
@@ -174,6 +179,7 @@ function App() {
             }}
           />
         )}
+
         {!token && (
           <Stack.Screen
             name="Verify"
@@ -197,6 +203,7 @@ function App() {
             },
           }}
         />
+
         <Stack.Screen
           name="Appearance"
           component={Appearance}
@@ -207,6 +214,7 @@ function App() {
             },
           }}
         />
+
         <Stack.Screen
           name="Settings"
           component={Settings}
@@ -217,6 +225,7 @@ function App() {
             },
           }}
         />
+
         <Stack.Screen
           name="DoctorDetailed"
           component={DoctorDetails}

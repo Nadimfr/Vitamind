@@ -1,5 +1,4 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -18,24 +17,33 @@ function Register({ navigation }) {
   const [user, setUser] = useState({
     email: '',
     password: '',
+    confirmPassword: '',
     username: '',
     image_url: '',
     verificationCode: null,
   });
+  const [matchingPassword, setMatchingPassword] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    console.log('MATCHING', matchingPassword);
+  }, [matchingPassword]);
 
   const handleCode = useCallback(async (email) => {
     setLoading(true);
-
-    await api.VerificationCodeReception(email).then((res) => {
-      navigation.navigate('Verify', {
-        user: {
-          ...user,
-          verificationCode: res,
-        },
+    if (user.password !== user.confirmPassword) {
+      setMatchingPassword(false);
+    } else {
+      await api.VerificationCodeReception(email).then((res) => {
+        navigation.navigate('Verify', {
+          user: {
+            ...user,
+            verificationCode: res,
+          },
+        });
+        setLoading(false);
       });
-      setLoading(false);
-    });
+    }
   });
 
   return (
@@ -75,30 +83,27 @@ function Register({ navigation }) {
 
         <View style={{ marginBottom: 10 }}>
           <TextField
+            inputStyle={{ borderColor: !matchingPassword && 'red' }}
+            password
             label="Password"
             placeholder="Enter your password"
             value={user.password}
             onChange={(text) => setUser({ ...user, password: text })}
           />
         </View>
-        {/* <Animatable.View
-          style={{ marginBottom: 10 }}
-          animation={
-            user.confirmpassword.length > 0 &&
-            user.confirmpassword !== user.password
-              ? 'shake'
-              : null
-          }
-        >
+
+        <View style={{ marginBottom: 10 }}>
           <TextField
+            inputStyle={{ borderColor: !matchingPassword && 'red' }}
+            password
             label="Confirm Password"
             placeholder="Confirm your password"
-            value={user.confirmpassword}
-            onChange={(text) => setUser({ ...user, confirmpassword: text })}
+            value={user.confirmPassword}
+            onChangeText={(text) => setUser({ ...user, confirmPassword: text })}
             secureTextEntry
-            onChangeText={setConfirmPassword}
+            onChange={(text) => setUser({ ...user, confirmPassword: text })}
           />
-        </Animatable.View> */}
+        </View>
 
         <View
           style={{
