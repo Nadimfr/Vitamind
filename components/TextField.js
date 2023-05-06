@@ -29,12 +29,14 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
+
   label: {
     color: '#142F21',
     fontSize: 16,
     fontFamily: 'Lato',
     marginLeft: 20,
   },
+
   input: {
     marginTop: 5,
     padding: 15,
