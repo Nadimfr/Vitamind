@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -23,6 +24,8 @@ import Recommender from './screens/Branded/Recommender';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+LogBox.ignoreAllLogs(true);
 
 function LoggedInTabs() {
   return (
