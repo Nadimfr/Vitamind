@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, TextInput, Text } from 'react-native';
+import React from "react";
+import { View, StyleSheet, TextInput, Text } from "react-native";
 
 const TextField = ({
   label,
@@ -8,16 +8,24 @@ const TextField = ({
   password,
   onChange,
   inputStyle,
+  journal,
 }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
         value={value}
-        style={[styles.input, inputStyle]}
+        style={[
+          styles.input,
+          inputStyle,
+          {
+            paddingTop: journal && 30,
+          },
+        ]}
         placeholder={placeholder}
         secureTextEntry={password && true}
         onChangeText={onChange}
+        multiline={journal && true}
       />
     </View>
   );
@@ -27,13 +35,13 @@ export default TextField;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: "100%",
   },
 
   label: {
-    color: '#142F21',
+    color: "#142F21",
     fontSize: 16,
-    fontFamily: 'Lato',
+    fontFamily: "Lato",
     marginLeft: 20,
   },
 
@@ -43,6 +51,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: '#142F21',
+    borderColor: "#142F21",
   },
 });
