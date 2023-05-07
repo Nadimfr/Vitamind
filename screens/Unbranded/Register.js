@@ -12,6 +12,7 @@ import Button from '../../components/Button';
 import TextField from '../../components/TextField';
 import * as Animatable from 'react-native-animatable';
 import * as api from '../../controllers/ApiUser';
+import Popup from '../../components/Popup';
 
 function Register({ navigation }) {
   const [user, setUser] = useState({
@@ -24,14 +25,23 @@ function Register({ navigation }) {
   });
   const [matchingPassword, setMatchingPassword] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [showEmailPopup, setShowEmailPopup] = useState(false);
 
   useEffect(() => {
     console.log('MATCHING', matchingPassword);
   }, [matchingPassword]);
 
+  const validateEmail = (email) => {
+    const re =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    return re.test(email.toLowerCase());
+  };
+
   const handleCode = useCallback(async (email) => {
     setLoading(true);
-    if (user.password !== user.confirmPassword) {
+    if (!validateEmail(email)) {
+      setShowEmailPopup(true);
+    } else if (user.password !== user.confirmPassword) {
       setMatchingPassword(false);
     } else {
       await api.VerificationCodeReception(email).then((res) => {
@@ -48,6 +58,13 @@ function Register({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {showEmailPopup && (
+        <Popup
+          title="Cannot Login"
+          description="Invalid email format"
+          onPress={() => setShowEmailPopup(false)}
+        />
+      )}
       <StatusBar barStyle="dark-content" />
       <KeyboardAvoidingView behavior="position">
         <Text style={[styles.text, { color: '#142F21' }]}>Welcome to</Text>

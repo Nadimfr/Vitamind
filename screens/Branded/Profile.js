@@ -9,8 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearAll, getData } from '../../helpers/AsyncStorage';
 
 function Profile({ navigation }) {
-  // const navigation = useNavigation();
-
   const options = [
     {
       Title: 'Settings',

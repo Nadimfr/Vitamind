@@ -33,7 +33,7 @@ const Appearance = ({ navigation }) => {
       }}
     >
       <View style={styles.Header}>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons
             name="chevron-back"
             color={currentTheme == 'dark' ? 'white' : 'black'}

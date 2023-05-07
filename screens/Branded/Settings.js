@@ -10,7 +10,7 @@ const Settings = ({ navigation }) => {
         flex: 1,
       }}
     >
-      <Header dots screenName="Settings" />
+      <Header onBack={() => navigation.goBack()} dots screenName="Settings" />
 
       <View style={styles.Layout}>
         <View style={{ marginBottom: 25, width: '100%' }}>

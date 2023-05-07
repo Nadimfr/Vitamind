@@ -19,11 +19,16 @@ export const userRegister = async (userInfo) => {
 };
 
 export const userLogin = async (userInfo) => {
-  return await APIKIT.post('users/login', userInfo).then((res) => {
-    console.log(res.data);
-    if (res.data) return res.data;
-    else Alert.alert('Invalid User');
-  });
+  return await APIKIT.post('users/login', userInfo)
+    .then((res) => {
+      if (res.status == 200) {
+        return res;
+      }
+    })
+    .catch((error) => {
+      // console.log('NOP', error.response.status);
+      return error.response.status;
+    });
 };
 
 export const userDelete = async (userId) => {

@@ -98,92 +98,100 @@ function Home({ navigation }) {
   }, [doctors]);
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: currentTheme == 'dark' ? '#000' : '#fff',
-        },
-      ]}
-    >
-      {dailyMood && (
+    <>
+      <ScrollView
+        style={[
+          styles.container,
+          {
+            backgroundColor: currentTheme == 'dark' ? '#000' : '#fff',
+          },
+        ]}
+      >
+        {/* {dailyMood && (
         <Modal visible>
           <MoodEveryday />
         </Modal>
-      )}
+      )} */}
 
-      <Header screenName="Home" />
+        <Header screenName="Home" />
+        <StatusBar translucent backgroundColor="black" />
 
-      <MotivationalQuote Quote={quote} Image={image} />
-
-      <View
-        style={{
-          paddingHorizontal: 20,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          width: Dimensions.get('screen').width,
-          marginBottom: 10,
-        }}
-      >
-        <Text
+        <View style={{ alignSelf: 'center' }}>
+          <MotivationalQuote Quote={quote} Image={image} />
+        </View>
+        <View
           style={{
-            color: 'black',
-            fontFamily: 'Poppins_SemiBold',
-            fontSize: 24,
-            width: Dimensions.get('screen').width * 0.5,
+            paddingHorizontal: 20,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            width: Dimensions.get('screen').width,
+            marginBottom: 10,
           }}
         >
-          Doctors available today
-        </Text>
+          <Text
+            style={{
+              color: 'black',
+              fontFamily: 'Poppins_SemiBold',
+              fontSize: 24,
+              width: Dimensions.get('screen').width * 0.5,
+            }}
+          >
+            Doctors available today
+          </Text>
 
-        <TouchableOpacity>
-          <Text>see all</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity>
+            <Text>see all</Text>
+          </TouchableOpacity>
+        </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{
-          paddingHorizontal: 20,
-        }}
-      >
-        {doctors.map((d, idx) => (
-          <Doctor
-            key={idx}
-            online={d.status}
-            image={d.image_url}
-            onPress={() =>
-              navigation.navigate('DoctorDetailed', {
-                id: d._id,
-              })
-            }
-          />
-        ))}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{
+            paddingHorizontal: 20,
+            marginBottom: 20,
+          }}
+        >
+          {doctors.map((d, idx) => (
+            <Doctor
+              key={idx}
+              online={d.status}
+              image={d.image_url}
+              onPress={() =>
+                navigation.navigate('DoctorDetailed', {
+                  id: d._id,
+                })
+              }
+            />
+          ))}
+        </ScrollView>
+
+        <View
+          style={{
+            paddingHorizontal: 20,
+            width: Dimensions.get('screen').width,
+            marginBottom: 30,
+          }}
+        >
+          <Text
+            style={{
+              color: 'black',
+              fontFamily: 'Poppins_Regular',
+              fontSize: 18,
+            }}
+          >
+            Your mood throughout the week
+          </Text>
+        </View>
+
+        <Chart />
+        <Chart />
+        <Chart />
+        <Chart />
       </ScrollView>
-
-      <View
-        style={{
-          paddingHorizontal: 20,
-          width: Dimensions.get('screen').width,
-          marginBottom: 30,
-        }}
-      >
-        <Text
-          style={{
-            color: 'black',
-            fontFamily: 'Poppins_Regular',
-            fontSize: 18,
-          }}
-        >
-          Your mood throughout the week
-        </Text>
-      </View>
-
-      <Chart />
-    </View>
+    </>
   );
 }
 
@@ -192,7 +200,6 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
   },
   text: {
     fontSize: 42,

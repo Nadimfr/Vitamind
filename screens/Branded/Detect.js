@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -7,11 +7,11 @@ import {
   View,
   Dimensions,
   Alert,
-} from "react-native";
-import Swiper from "react-native-swiper";
-import { Camera } from "expo-camera";
-import axios from "axios";
-import Loader from "../../components/Loader";
+} from 'react-native';
+import Swiper from 'react-native-swiper';
+import { Camera } from 'expo-camera';
+import axios from 'axios';
+import Loader from '../../components/Loader';
 
 function FaceExpression({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -22,7 +22,7 @@ function FaceExpression({ navigation }) {
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === "granted");
+      setHasPermission(status === 'granted');
     })();
   }, []);
 
@@ -40,36 +40,36 @@ function FaceExpression({ navigation }) {
   };
 
   const uploadImage = async (imageUri) => {
-    const url = "https://api.imgbb.com/1/upload";
-    const apiKey = "e400225c1aca3fbc13a11be33e2bb24d";
+    const url = 'https://api.imgbb.com/1/upload';
+    const apiKey = 'e400225c1aca3fbc13a11be33e2bb24d';
     const expiration = 1000000;
     const headers = {
-      "Content-Type": "multipart/form-data",
+      'Content-Type': 'multipart/form-data',
     };
 
     const formData = new FormData();
-    formData.append("key", apiKey);
-    formData.append("expiration", expiration);
-    formData.append("image", {
+    formData.append('key', apiKey);
+    formData.append('expiration', expiration);
+    formData.append('image', {
       uri: imageUri,
-      type: "image/jpeg",
-      name: "image.jpg",
+      type: 'image/jpeg',
+      name: 'image.jpg',
     });
 
     try {
       const response = await axios.post(url, formData, headers);
-      console.log("UPLOAD SUCCESS", response.data.data.url);
+      console.log('UPLOAD SUCCESS', response.data.data.url);
       detectEmotions(response.data.data.url);
     } catch (error) {
-      console.log("ERROR", error);
+      console.log('ERROR', error);
     }
   };
 
   const detectEmotions = async (imageData) => {
     const headers = {
-      "X-RapidAPI-Key": "6e3a44137cmshf321fbccc5cb04dp132bf2jsnbb7f3808ab4a",
-      "X-RapidAPI-Host": "emotion-detection2.p.rapidapi.com",
-      "Content-Type": "application/json",
+      'X-RapidAPI-Key': '6e3a44137cmshf321fbccc5cb04dp132bf2jsnbb7f3808ab4a',
+      'X-RapidAPI-Host': 'emotion-detection2.p.rapidapi.com',
+      'Content-Type': 'application/json',
     };
 
     const data = {
@@ -78,11 +78,11 @@ function FaceExpression({ navigation }) {
 
     try {
       const response = await axios.post(
-        "https://emotion-detection2.p.rapidapi.com/emotion-detection",
+        'https://emotion-detection2.p.rapidapi.com/emotion-detection',
         data,
         { headers }
       );
-      console.log("EMOTIONSS", response.data);
+      console.log('EMOTIONSS', response.data);
       setLoader(false);
       Alert.alert(response.data[0].emotion.value);
     } catch (error) {
@@ -94,24 +94,24 @@ function FaceExpression({ navigation }) {
   return (
     <View style={styles.container}>
       <Camera type={type} style={styles.camera} ref={cameraRef}>
-        <View style={{ marginTop: 650, alignSelf: "center" }}>
+        <View style={{ marginTop: 650, alignSelf: 'center' }}>
           <TouchableOpacity
             onPress={takePicture}
             style={{
               width: 75,
               height: 75,
               borderRadius: 50,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               borderWidth: 5,
-              borderColor: "white",
+              borderColor: 'white',
             }}
           >
             <Text
               style={{
-                color: "white",
-                fontFamily: "Poppins_Bold",
+                color: 'white',
+                fontFamily: 'Poppins_Bold',
               }}
             >
               SCAN
@@ -122,9 +122,9 @@ function FaceExpression({ navigation }) {
       {loader && (
         <View
           style={{
-            position: "absolute",
-            width: Dimensions.get("screen").width,
-            height: Dimensions.get("screen").height,
+            position: 'absolute',
+            width: Dimensions.get('screen').width,
+            height: Dimensions.get('screen').height,
           }}
         >
           <Loader />
@@ -143,34 +143,34 @@ const Detect = ({ navigation }) => {
         <FaceExpression />
       ) : (
         <ImageBackground
-          source={require("../../assets/Bg.png")}
+          source={require('../../assets/Bg.png')}
           resizeMode="cover"
           style={{
             flex: 1,
-            alignItems: "start",
-            justifyContent: "space-between",
+            alignItems: 'start',
+            justifyContent: 'space-between',
             paddingTop: 150,
           }}
         >
           <View
             style={{
-              paddingHorizontal: "8%",
+              paddingHorizontal: '8%',
             }}
           >
             <Text
               style={{
-                fontFamily: "Poppins_SemiBold",
-                color: "white",
+                fontFamily: 'Poppins_SemiBold',
+                color: 'white',
                 fontSize: 50,
                 marginBottom: 15,
                 lineHeight: 60,
               }}
             >
-              <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                 <Text
-                  style={{ color: "white", fontWeight: "900", fontSize: 40 }}
+                  style={{ color: 'white', fontWeight: '900', fontSize: 40 }}
                 >
-                  {"<"}
+                  {'<'}
                 </Text>
               </TouchableOpacity>
               Vitamind will help you get better!
@@ -178,9 +178,9 @@ const Detect = ({ navigation }) => {
 
             <Text
               style={{
-                color: "white",
+                color: 'white',
                 fontWeight: 500,
-                fontFamily: "Lato",
+                fontFamily: 'Lato',
                 fontSize: 20,
               }}
             >
@@ -190,8 +190,8 @@ const Detect = ({ navigation }) => {
 
           <Swiper
             style={{ marginTop: 350, marginLeft: 10 }}
-            dotStyle={{ display: "none" }}
-            activeDotStyle={{ display: "none" }}
+            dotStyle={{ display: 'none' }}
+            activeDotStyle={{ display: 'none' }}
             showsButtons={false}
             onIndexChanged={(e) => setActive(e)}
           >
@@ -199,40 +199,40 @@ const Detect = ({ navigation }) => {
               style={{
                 height: 75,
                 width: 75,
-                borderColor: "white",
+                borderColor: 'white',
                 borderWidth: 4,
                 borderRadius: 100,
-                alignSelf: "center",
+                alignSelf: 'center',
               }}
             ></TouchableOpacity>
             <TouchableOpacity
               style={{
                 height: 75,
                 width: 75,
-                borderColor: "white",
+                borderColor: 'white',
                 borderWidth: 4,
                 borderRadius: 100,
-                alignSelf: "center",
+                alignSelf: 'center',
               }}
             ></TouchableOpacity>
             <TouchableOpacity
               style={{
                 height: 75,
                 width: 75,
-                borderColor: "white",
+                borderColor: 'white',
                 borderWidth: 4,
                 borderRadius: 100,
-                alignSelf: "center",
+                alignSelf: 'center',
               }}
             ></TouchableOpacity>
             <TouchableOpacity
               style={{
                 height: 75,
                 width: 75,
-                borderColor: "white",
+                borderColor: 'white',
                 borderWidth: 4,
                 borderRadius: 100,
-                alignSelf: "center",
+                alignSelf: 'center',
               }}
             ></TouchableOpacity>
           </Swiper>
@@ -247,11 +247,11 @@ export default Detect;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: "black",
+    flexDirection: 'column',
+    backgroundColor: 'black',
   },
   camera: {
-    height: Dimensions.get("screen").height,
-    width: Dimensions.get("screen").width,
+    height: Dimensions.get('screen').height,
+    width: Dimensions.get('screen').width,
   },
 });

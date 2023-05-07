@@ -17,6 +17,8 @@ import Settings from './screens/Branded/Settings';
 import OnBoard from './screens/Unbranded/OnBoard';
 import DoctorDetails from './screens/Branded/DoctorDetails';
 import Verify from './screens/Unbranded/Verify';
+import JournalGeneral from './screens/Branded/JournalGeneral';
+import Journals from './screens/Branded/Journals';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -26,26 +28,43 @@ function LoggedInTabs() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarVisible: route.name !== 'Appearance', // hide the Appearance screen from the tab bar
+        tabBarStyle: {
+          backgroundColor: '#42A45C',
+          // borderTopWidth: 3,
+          // borderTopColor: '#142F21',
+          shadowColor: 'green',
+          shadowOffset: { width: 0, height: -5 },
+          shadowOpacity: 0.1,
+          shadowRadius: 1,
+        },
       })}
     >
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
+          tabBarLabelStyle: { color: 'white', fontFamily: 'Poppins_SemiBold' },
+          tabBarIconStyle: { marginTop: 10 },
           tabBarLabel: 'Home',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" size={26} />
+            <MaterialCommunityIcons color="white" name="home" size={26} />
           ),
           headerShown: false,
         }}
       />
       <Tab.Screen
-        name="Journal"
-        component={Detect}
+        name="Journals"
+        component={Journals}
         options={{
-          tabBarLabel: 'Journal',
+          tabBarLabelStyle: { color: 'white', fontFamily: 'Poppins_SemiBold' },
+          tabBarIconStyle: { marginTop: 10 },
+          tabBarLabel: 'Journals',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="notebook-outline" size={26} />
+            <MaterialCommunityIcons
+              color="white"
+              name="notebook-outline"
+              size={26}
+            />
           ),
           headerShown: false,
         }}
@@ -55,8 +74,13 @@ function LoggedInTabs() {
         component={Detect}
         options={{
           tabBarLabel: '',
+          tabBarLabelStyle: { display: 'none' },
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="circle-outline" size={26} />
+            <MaterialCommunityIcons
+              color="white"
+              name="circle-outline"
+              size={50}
+            />
           ),
           tabBarStyle: { display: 'none' },
           headerShown: false,
@@ -66,9 +90,11 @@ function LoggedInTabs() {
         name="History"
         component={Home}
         options={{
+          tabBarLabelStyle: { color: 'white', fontFamily: 'Poppins_SemiBold' },
+          tabBarIconStyle: { marginTop: 10 },
           tabBarLabel: 'History',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="history" size={26} />
+            <MaterialCommunityIcons color="white" name="history" size={26} />
           ),
           headerShown: false,
         }}
@@ -77,9 +103,11 @@ function LoggedInTabs() {
         name="Profile"
         component={Profile}
         options={{
+          tabBarLabelStyle: { color: 'white', fontFamily: 'Poppins_SemiBold' },
+          tabBarIconStyle: { marginTop: 10 },
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" size={26} />
+            <MaterialCommunityIcons color="white" name="account" size={26} />
           ),
           tabBarStyle: { display: 'none' },
           headerShown: false,
@@ -135,16 +163,68 @@ function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          gestureEnabled: false,
-        }}
-      >
-        {!user && (
+    <>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            gestureEnabled: false,
+          }}
+        >
+          {!user && (
+            <Stack.Screen
+              name="Onboard"
+              component={OnBoard}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+          )}
+
+          {!token && (
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+          )}
+
+          {!token && (
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+          )}
+
+          {!token && (
+            <Stack.Screen
+              name="Verify"
+              component={Verify}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+          )}
+
           <Stack.Screen
-            name="Onboard"
-            component={OnBoard}
+            name="Home"
+            component={LoggedInTabs}
             options={{
               headerShown: false,
               tabBarStyle: {
@@ -152,12 +232,10 @@ function App() {
               },
             }}
           />
-        )}
 
-        {!token && (
           <Stack.Screen
-            name="Login"
-            component={Login}
+            name="Appearance"
+            component={Appearance}
             options={{
               headerShown: false,
               tabBarStyle: {
@@ -165,12 +243,10 @@ function App() {
               },
             }}
           />
-        )}
 
-        {!token && (
           <Stack.Screen
-            name="Register"
-            component={Register}
+            name="Journal"
+            component={JournalGeneral}
             options={{
               headerShown: false,
               tabBarStyle: {
@@ -178,12 +254,10 @@ function App() {
               },
             }}
           />
-        )}
 
-        {!token && (
           <Stack.Screen
-            name="Verify"
-            component={Verify}
+            name="Settings"
+            component={Settings}
             options={{
               headerShown: false,
               tabBarStyle: {
@@ -191,51 +265,18 @@ function App() {
               },
             }}
           />
-        )}
 
-        <Stack.Screen
-          name="Home"
-          component={LoggedInTabs}
-          options={{
-            headerShown: false,
-            tabBarStyle: {
-              display: 'none',
-            },
-          }}
-        />
-
-        <Stack.Screen
-          name="Appearance"
-          component={Appearance}
-          options={{
-            headerShown: false,
-            tabBarStyle: {
-              display: 'none',
-            },
-          }}
-        />
-
-        <Stack.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            headerShown: false,
-            tabBarStyle: {
-              display: 'none',
-            },
-          }}
-        />
-
-        <Stack.Screen
-          name="DoctorDetailed"
-          component={DoctorDetails}
-          options={{
-            headerShown: false,
-            tabBarStyle: {},
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen
+            name="DoctorDetailed"
+            component={DoctorDetails}
+            options={{
+              headerShown: false,
+              tabBarStyle: {},
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
 

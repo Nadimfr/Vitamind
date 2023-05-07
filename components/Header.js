@@ -4,8 +4,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import Entypo from 'react-native-vector-icons/Entypo';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Header({ dots, screenName, onBack }) {
@@ -13,8 +11,6 @@ function Header({ dots, screenName, onBack }) {
 
   useEffect(() => {
     AsyncStorage.getItem('theme').then((theme) => {
-      console.log('APPP', theme);
-
       if (theme) {
         setAppTheme(theme);
       }

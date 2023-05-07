@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useContext, useState } from 'react';
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   StatusBar,
@@ -10,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import Button from '../../components/Button';
+import Popup from '../../components/Popup';
 import TextField from '../../components/TextField';
 import * as api from '../../controllers/ApiUser';
 import { storeData } from '../../helpers/AsyncStorage';
@@ -17,22 +19,37 @@ import { storeData } from '../../helpers/AsyncStorage';
 function Login({ navigation }) {
   const [user, setUser] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showEmailPopup, setShowEmailPopup] = useState(false);
 
   const handleLogin = (userInfo) => {
     setLoading(true);
     console.log('USER', userInfo);
     api.userLogin(userInfo).then((res) => {
-      console.log('first', res);
-      storeData('token', res.token);
-      storeData('user', res);
-      navigation.navigate('Home');
-      setLoading(false);
+      if (res == 404) {
+        setLoading(false);
+        setShowPopup(true);
+      } else {
+        console.log('login screen', res);
+        storeData('token', res?.data?.token);
+        storeData('user', res?.data?.user);
+        navigation.navigate('Home');
+        setLoading(false);
+      }
     });
   };
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
+
+      {showPopup && (
+        <Popup
+          title="Cannot Login"
+          description="Invalid user credentials"
+          onPress={() => setShowPopup(false)}
+        />
+      )}
       <KeyboardAvoidingView behavior="position">
         <Text style={[styles.text, { color: '#142F21' }]}>Welcome to</Text>
         <Text
