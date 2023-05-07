@@ -19,6 +19,7 @@ import DoctorDetails from './screens/Branded/DoctorDetails';
 import Verify from './screens/Unbranded/Verify';
 import JournalGeneral from './screens/Branded/JournalGeneral';
 import Journals from './screens/Branded/Journals';
+import Recommender from './screens/Branded/Recommender';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -258,6 +259,17 @@ function App() {
           <Stack.Screen
             name="Settings"
             component={Settings}
+            options={{
+              headerShown: false,
+              tabBarStyle: {
+                display: 'none',
+              },
+            }}
+          />
+
+          <Stack.Screen
+            name="Recommender"
+            component={Recommender}
             options={{
               headerShown: false,
               tabBarStyle: {

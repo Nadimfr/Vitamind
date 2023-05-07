@@ -12,12 +12,15 @@ import Swiper from 'react-native-swiper';
 import { Camera } from 'expo-camera';
 import axios from 'axios';
 import Loader from '../../components/Loader';
+import Popup from '../../components/Popup';
 
-function FaceExpression({ navigation }) {
+function FaceExpression({ showPopup, onFinish }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [loader, setLoader] = useState(false);
   const cameraRef = useRef(null);
   const [type, setType] = useState(Camera.Constants.Type.front);
+  const [recommender, setRecommender] = useState(false);
+  const [emotion, setEmotion] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -84,7 +87,8 @@ function FaceExpression({ navigation }) {
       );
       console.log('EMOTIONSS', response.data);
       setLoader(false);
-      Alert.alert(response.data[0].emotion.value);
+      await setEmotion(response.data[0].emotion.value);
+      setRecommender(true);
     } catch (error) {
       setLoader(false);
       Alert.alert(error);
@@ -93,6 +97,7 @@ function FaceExpression({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {recommender && <Popup title={`You are ${emotion}`} onPress={onFinish} />}
       <Camera type={type} style={styles.camera} ref={cameraRef}>
         <View style={{ marginTop: 650, alignSelf: 'center' }}>
           <TouchableOpacity
@@ -140,7 +145,11 @@ const Detect = ({ navigation }) => {
   return (
     <>
       {active === 1 ? (
-        <FaceExpression />
+        <FaceExpression
+          onFinish={() => {
+            navigation.navigate('Recommender');
+          }}
+        />
       ) : (
         <ImageBackground
           source={require('../../assets/Bg.png')}

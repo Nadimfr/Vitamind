@@ -1,19 +1,20 @@
-import React from "react";
-import { View, Image, StyleSheet, Text } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { FlatGrid } from "react-native-super-grid";
+import React from 'react';
+import { View, Image, StyleSheet, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatGrid } from 'react-native-super-grid';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-function Recommender() {
+function Recommender({ navigation }) {
   const [items, setItems] = React.useState([
-    { name: "TURQUOISE", code: "#142F21" },
-    { name: "EMERALD", code: "#B2ECC4" },
-    { name: "PETER RIVER", code: "#42A45C" },
-    { name: "TURQUOISE", code: "#142F21" },
-    { name: "EMERALD", code: "#B2ECC4" },
-    { name: "PETER RIVER", code: "#42A45C" },
-    { name: "TURQUOISE", code: "#142F21" },
-    { name: "EMERALD", code: "#B2ECC4" },
-    { name: "PETER RIVER", code: "#42A45C" },
+    { name: 'TURQUOISE', code: '#142F21' },
+    { name: 'EMERALD', code: '#B2ECC4' },
+    { name: 'PETER RIVER', code: '#42A45C' },
+    { name: 'TURQUOISE', code: '#142F21' },
+    { name: 'EMERALD', code: '#B2ECC4' },
+    { name: 'PETER RIVER', code: '#42A45C' },
+    { name: 'TURQUOISE', code: '#142F21' },
+    { name: 'EMERALD', code: '#B2ECC4' },
+    { name: 'PETER RIVER', code: '#42A45C' },
   ]);
 
   return (
@@ -21,10 +22,16 @@ function Recommender() {
       style={{
         paddingTop: 90,
         paddingHorizontal: 15,
-        height: "100%",
-        backgroundColor: "white",
+        height: '100%',
+        backgroundColor: 'white',
       }}
     >
+      <TouchableOpacity
+        style={{ width: '33.33%' }}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="chevron-back" color={'black'} size={25} />
+      </TouchableOpacity>
       <Text style={styles.titleheading}>Vitamind,</Text>
       <Text style={styles.titleheading2}>recommends</Text>
       <Text style={styles.titleheading3}>you to:</Text>
@@ -48,31 +55,29 @@ function Recommender() {
   );
 }
 
-export default Recommender;
-
 const styles = StyleSheet.create({
   titleheading: {
-    textAlign: "Left",
+    textAlign: 'Left',
     fontSize: 40,
-    fontFamily: "Poppins_Regular",
-    alignSelf: "left",
-    color: "#142F21",
+    fontFamily: 'Poppins_Regular',
+    alignSelf: 'left',
+    color: '#142F21',
     marginLeft: 10,
   },
   titleheading2: {
-    textAlign: "Left",
+    textAlign: 'Left',
     fontSize: 30,
-    fontFamily: "Poppins_Bold",
-    alignSelf: "left",
-    color: "#42A45C",
+    fontFamily: 'Poppins_Bold',
+    alignSelf: 'left',
+    color: '#42A45C',
     marginLeft: 10,
   },
   titleheading3: {
-    textAlign: "Left",
+    textAlign: 'Left',
     fontSize: 30,
-    fontFamily: "Poppins_Bold",
-    alignSelf: "left",
-    color: "#42A45C",
+    fontFamily: 'Poppins_Bold',
+    alignSelf: 'left',
+    color: '#42A45C',
     marginLeft: 10,
   },
   gridView: {
@@ -80,19 +85,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemContainer: {
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     borderRadius: 5,
     padding: 10,
     height: 150,
   },
   itemName: {
     fontSize: 16,
-    color: "#fff",
-    fontWeight: "600",
+    color: '#fff',
+    fontWeight: '600',
   },
   itemCode: {
-    fontWeight: "600",
+    fontWeight: '600',
     fontSize: 12,
-    color: "#fff",
+    color: '#fff',
   },
 });
+
+export default Recommender;

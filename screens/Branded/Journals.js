@@ -20,7 +20,6 @@ const Journals = ({ navigation }) => {
   useEffect(() => {
     try {
       api.getAllJournalsByUserId(userId).then((res) => {
-        console.log(res, 'LOL');
         setJournals(res);
       });
     } catch (error) {
