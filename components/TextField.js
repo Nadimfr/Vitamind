@@ -8,16 +8,24 @@ const TextField = ({
   password,
   onChange,
   inputStyle,
+  journal,
 }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
         value={value}
-        style={[styles.input, inputStyle]}
+        style={[
+          styles.input,
+          inputStyle,
+          {
+            paddingTop: journal && 30,
+          },
+        ]}
         placeholder={placeholder}
         secureTextEntry={password && true}
         onChangeText={onChange}
+        multiline={journal && true}
       />
     </View>
   );

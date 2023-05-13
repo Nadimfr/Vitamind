@@ -32,7 +32,7 @@ function Home({ navigation }) {
   const client = createClient(
     'SQsOlDuKv74Jy3iwJOvik5rtkIT0STF9IJMykd57nxvDQLlefNbYyCTl'
   );
-  const query = 'Mind';
+  const query = 'nature';
 
   useEffect(() => {
     setTimeout(() => {
@@ -45,26 +45,26 @@ function Home({ navigation }) {
       setImage(photos.photos[0].src.landscape);
     });
 
-    // const fetchQuote = async () => {
-    //   try {
-    //     const options = {
-    //       method: 'POST',
-    //       url: 'https://qurotel-quotes.p.rapidapi.com/quotes/random',
-    //       headers: {
-    //         'content-type': 'application/json',
-    //         'X-RapidAPI-Key':
-    //           '6e3a44137cmshf321fbccc5cb04dp132bf2jsnbb7f3808ab4a',
-    //         'X-RapidAPI-Host': 'quotel-quotes.p.rapidapi.com',
-    //       },
-    //       data: '{}',
-    //     };
-    //     const response = await axios.request(options);
-    //     setQuote(response.data.quote);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // };
-    // fetchQuote();
+    const fetchQuote = async () => {
+      try {
+        const options = {
+          method: 'POST',
+          url: 'https://qurotel-quotes.p.rapidapi.com/quotes/random',
+          headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key':
+              '6e3a44137cmshf321fbccc5cb04dp132bf2jsnbb7f3808ab4a',
+            'X-RapidAPI-Host': 'quotel-quotes.p.rapidapi.com',
+          },
+          data: '{}',
+        };
+        const response = await axios.request(options);
+        setQuote(response.data.quote);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchQuote();
   }, []);
 
   useEffect(() => {

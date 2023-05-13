@@ -3,8 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../components/Header';
 import * as api from '../../controllers/ApiUser';
-import { Audio } from 'expo-av';
-import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearAll, getData } from '../../helpers/AsyncStorage';
 
@@ -31,20 +29,19 @@ function Profile({ navigation }) {
     //   onPress: removeToken,
     // },
   ];
+  const [userId, setUserId] = useState('');
+  const [user, setUser] = useState();
+  const [token, setToken] = useState('');
 
   const removeToken = async () => {
     try {
-      await clearAll();
-      await setToken(''); // Wait for the state to be updated
       navigation.navigate('Login');
+      setToken('');
+      await clearAll();
     } catch (error) {
       console.log('Error removing token:', error);
     }
   };
-
-  const [userId, setUserId] = useState('');
-  const [user, setUser] = useState();
-  const [token, setToken] = useState('');
 
   useEffect(() => {
     async function fetchToken() {
@@ -59,52 +56,22 @@ function Profile({ navigation }) {
     fetchToken();
   }, [token]);
 
-  const sound = new Audio.Sound();
-
-  async function playSound() {
-    try {
-      await sound.unloadAsync(); // unload previous audio file
-      await sound.loadAsync(require('../../assets/sounds/Press.mp3'));
-      await sound.playAsync();
-    } catch (error) {
-      // handle errors here
-    }
-  }
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const user = await AsyncStorage.getItem('user');
-  //     setUserId(user);
-  //   }
-
-  //   fetchData();
-
-  //   api.getUserDetails(userId).then((res) => {
-  //     console.log('RESULT ??', res);
-  //   });
-  // }, []);
-
   useEffect(() => {
     async function fetchData() {
       const user = await AsyncStorage.getItem('user');
-      setUserId(user);
-
-      const userDetails = await api.getUserDetails(user);
-      console.log('RESULT ??', userDetails);
+      setUserId(user?._id);
     }
 
     fetchData();
-  }, []);
+  }, [userId]);
 
-  // useEffect(() => {
-  //   async function getData(uid) {
-  //     await api.getUserDetails(uid).then((res) => {
-  //       console.log('RESULT ??', res);
-  //     });
-  //   }
-
-  //   getData(userId);
-  // }, [userId]);
+  useEffect(() => {
+    api.getUserDetails(userId).then((res) => {
+      // console.log('RESULYT ??', res);
+      // setUser(res);
+    });
+    [];
+  });
 
   const [theme, setTheme] = useState('');
 

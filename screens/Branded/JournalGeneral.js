@@ -60,8 +60,9 @@ function JournalGeneral() {
       />
       <View style={{ paddingHorizontal: 20 }}>
         <TextField
+          journal
           inputStyle={{
-            height: 500,
+            // height: 500,
             alignItems: 'flex-start',
             justifyContent: 'flex-start',
           }}

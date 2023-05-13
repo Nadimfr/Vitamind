@@ -187,44 +187,44 @@ function App() {
             />
           )}
 
-          {!token && (
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{
-                headerShown: false,
-                tabBarStyle: {
-                  display: 'none',
-                },
-              }}
-            />
-          )}
+          {/* {!token && ( */}
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerShown: false,
+              tabBarStyle: {
+                display: 'none',
+              },
+            }}
+          />
+          {/* )} */}
 
-          {!token && (
-            <Stack.Screen
-              name="Register"
-              component={Register}
-              options={{
-                headerShown: false,
-                tabBarStyle: {
-                  display: 'none',
-                },
-              }}
-            />
-          )}
+          {/* {!token && ( */}
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{
+              headerShown: false,
+              tabBarStyle: {
+                display: 'none',
+              },
+            }}
+          />
+          {/* )} */}
 
-          {!token && (
-            <Stack.Screen
-              name="Verify"
-              component={Verify}
-              options={{
-                headerShown: false,
-                tabBarStyle: {
-                  display: 'none',
-                },
-              }}
-            />
-          )}
+          {/* {!token && ( */}
+          <Stack.Screen
+            name="Verify"
+            component={Verify}
+            options={{
+              headerShown: false,
+              tabBarStyle: {
+                display: 'none',
+              },
+            }}
+          />
+          {/* )} */}
 
           <Stack.Screen
             name="Home"

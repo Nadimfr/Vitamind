@@ -46,9 +46,9 @@ const Verify = ({ route, navigation }) => {
       await api
         .userRegister(userInfo)
         .then((res) => {
-          storeData('token', res.token);
-          storeData('user', res);
-          navigation.navigate('Home');
+          // storeData('token', res.token);
+          // storeData('user', res);
+          navigation.navigate('Login');
         })
         .catch((error) => {
           console.log(error.response.data);

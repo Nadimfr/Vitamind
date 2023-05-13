@@ -38,9 +38,6 @@ const Journals = ({ navigation }) => {
       <Header screenName="Journals" dots onBack={() => navigation.goBack()} />
 
       <ScrollView style={{ paddingHorizontal: 20 }}>
-        {/* <TouchableOpacity>
-          <Text>Add</Text>
-      </TouchableOpacity> */}
         <Button title="Create" onPress={() => navigation.navigate('Journal')} />
 
         {journals.map((j, idx) => {
@@ -94,7 +91,7 @@ const Journals = ({ navigation }) => {
                   padding: 15,
                 }}
               >
-                <Text>{j.text}</Text>
+                <Text numberOfLines={3}>{j.text}</Text>
               </View>
             );
           }

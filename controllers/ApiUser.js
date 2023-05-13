@@ -39,9 +39,12 @@ export const userDelete = async (userId) => {
   });
 };
 
-export const getUserDetails = async (id) => {
-  return await APIKIT.get(`users/${id}`).then((res) => {
-    if (res.data) return res.data;
-    else Alert.alert(res.data);
-  });
+export const getUserDetails = async (userId) => {
+  return await APIKIT.get(`users`, userId)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
