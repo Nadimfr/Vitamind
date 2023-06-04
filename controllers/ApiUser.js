@@ -48,3 +48,11 @@ export const getUserDetails = async (userId) => {
       console.log(err);
     });
 };
+
+export const getQuiz = async () => {
+  return await APIKIT.get(`/quiz/`).then((res) => {
+    // console.log('hiii', res);
+    if (res.status == 200) return res.data;
+    else Alert.alert(res.data);
+  });
+};

@@ -21,6 +21,7 @@ import Verify from './screens/Unbranded/Verify';
 import JournalGeneral from './screens/Branded/JournalGeneral';
 import Journals from './screens/Branded/Journals';
 import Recommender from './screens/Branded/Recommender';
+import Questionary from './screens/Branded/Questionary';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -92,8 +93,9 @@ function LoggedInTabs() {
       />
       <Tab.Screen
         name="History"
-        component={Home}
+        component={Questionary}
         options={{
+          tabBarStyle: { display: 'none' }, //to be removed
           tabBarLabelStyle: { color: 'white', fontFamily: 'Poppins_SemiBold' },
           tabBarIconStyle: { marginTop: 10 },
           tabBarLabel: 'History',
