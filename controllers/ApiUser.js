@@ -40,9 +40,9 @@ export const userDelete = async (userId) => {
 };
 
 export const getUserDetails = async (userId) => {
-  return await APIKIT.get(`users`, userId)
+  return await APIKIT.get(`users/${userId}`)
     .then((res) => {
-      return res.data;
+      return res;
     })
     .catch((err) => {
       console.log(err);
@@ -55,4 +55,28 @@ export const getQuiz = async () => {
     if (res.status == 200) return res.data;
     else Alert.alert(res.data);
   });
+};
+
+export const getHistoryByUserId = async (userId) => {
+  return await APIKIT.get(`history/${userId}`).then((res) => {
+    return res.data;
+  });
+};
+
+export const historyCreate = async (history) => {
+  return await APIKIT.post('history/create', history).then((res) => {
+    if (res.status == 200) {
+      return res.data;
+    } else Alert.alert('Error');
+  });
+};
+
+export const getRecommendationByType = async (type) => {
+  return await APIKIT.get(`recommendation/${type}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };

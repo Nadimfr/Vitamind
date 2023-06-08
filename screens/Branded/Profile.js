@@ -31,6 +31,7 @@ function Profile({ navigation }) {
   ];
   const [userId, setUserId] = useState('');
   const [user, setUser] = useState();
+  const [theme, setTheme] = useState('');
   const [token, setToken] = useState('');
 
   const removeToken = async () => {
@@ -58,8 +59,18 @@ function Profile({ navigation }) {
 
   useEffect(() => {
     async function fetchData() {
-      const user = await AsyncStorage.getItem('user');
-      setUserId(user?._id);
+      const whatTheme = await AsyncStorage.getItem('theme');
+      setTheme(whatTheme);
+    }
+    setInterval(() => {
+      fetchData();
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const userString = await AsyncStorage.getItem('user');
+      setUserId(JSON.parse(userString)._id);
     }
 
     fetchData();
@@ -67,30 +78,17 @@ function Profile({ navigation }) {
 
   useEffect(() => {
     api.getUserDetails(userId).then((res) => {
-      // console.log('RESULYT ??', res);
-      // setUser(res);
+      setUser(res.data);
     });
     [];
   });
-
-  const [theme, setTheme] = useState('');
-
-  useEffect(() => {
-    async function getTheme() {
-      const storedTheme = await AsyncStorage.getItem('theme');
-      if (storedTheme) {
-        setTheme(storedTheme);
-      }
-    }
-    getTheme();
-  }, []);
 
   return (
     <View
       style={[
         styles.profile1,
         {
-          backgroundColor: theme == 'dark' ? 'blue' : 'white',
+          backgroundColor: theme == 'dark' ? '#142F21' : 'white',
         },
       ]}
     >
@@ -101,11 +99,23 @@ function Profile({ navigation }) {
       />
       <View style={{ alignSelf: 'center' }}>
         <Image
-          style={styles.image}
+          style={[
+            styles.image,
+            { backgroundColor: !user?.image_url && '#B2ECC4' },
+          ]}
           src={`${user?.image_url}`}
           resizeMode="cover"
         />
-        <Text style={styles.name}>{user?.email}</Text>
+        <Text
+          style={[
+            styles.name,
+            {
+              color: theme == 'dark' ? 'white' : 'black',
+            },
+          ]}
+        >
+          {user?.email}
+        </Text>
         <Text style={styles.username}>@{user?.username}</Text>
       </View>
       <View style={styles.options}>

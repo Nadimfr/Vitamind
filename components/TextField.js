@@ -2,6 +2,8 @@ import React from 'react';
 import { View, StyleSheet, TextInput, Text } from 'react-native';
 
 const TextField = ({
+  onFocus,
+  onBlur,
   label,
   placeholder,
   value,
@@ -14,6 +16,8 @@ const TextField = ({
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
+        onFocus={onFocus}
+        onBlur={onBlur}
         value={value}
         style={[
           styles.input,

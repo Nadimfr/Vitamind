@@ -84,7 +84,7 @@ function Questionary() {
               fontFamily: 'Poppins_Bold',
               alignSelf: 'center',
               color: '#142F21',
-              width: '100%',
+              width: '90%',
             }}
           >
             {quiz[question]?.question}
@@ -93,9 +93,12 @@ function Questionary() {
 
         <View
           style={{
+            height: '50%',
             width: '100%',
-            paddingHorizontal: 30,
             marginTop: 15,
+            flexDirection: 'column',
+            // flexWrap: 'wrap',
+            // alignItems: 'flex-start',
           }}
         >
           {quiz[question]?.answers.map((a, idx) => (
@@ -113,7 +116,8 @@ function Questionary() {
             </TouchableOpacity>
           ))}
         </View>
-        <View style={{ width: '100%' }}>
+
+        {/* <View style={{ width: '100%' }}>
           <TouchableOpacity
             onPress={() => {
               setQuestion(question + 1);
@@ -127,8 +131,8 @@ function Questionary() {
               {quiz.length == quiz[question]?.id ? 'Submit' : 'Next'}
             </Text>
           </TouchableOpacity>
-        </View>
-        <TouchableOpacity
+        </View> */}
+        {/* <TouchableOpacity
           onPress={() => {
             setQuestion(0);
           }}
@@ -144,7 +148,7 @@ function Questionary() {
           style={styles.buttonnext}
         >
           <Text style={{ color: '#142F21', fontSize: 22 }}>Submit</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -195,6 +199,5 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    alignSelf: 'center',
   },
 });

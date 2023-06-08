@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-const Button = ({ title, disabled, onPress, loading }) => {
+const Button = ({ title, disabled, onPress, loading, theme }) => {
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -16,11 +16,21 @@ const Button = ({ title, disabled, onPress, loading }) => {
         styles.button,
         {
           opacity: disabled ? 0.6 : 1,
+          backgroundColor: theme == 'dark' ? 'white' : '#142F21',
         },
       ]}
     >
       {!loading ? (
-        <Text style={styles.text}>{title}</Text>
+        <Text
+          style={[
+            styles.text,
+            {
+              color: theme == 'dark' ? '#142F21' : 'white',
+            },
+          ]}
+        >
+          {title}
+        </Text>
       ) : (
         <ActivityIndicator color="white" size="small" />
       )}
@@ -40,7 +50,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
     borderRadius: 30,
-    backgroundColor: '#142F21',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
@@ -51,6 +60,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Poppins',
     textAlign: 'left',
-    color: 'white',
   },
 });

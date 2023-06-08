@@ -9,7 +9,7 @@ import {
   StackedBarChart,
 } from 'react-native-chart-kit';
 
-const Chart = () => {
+const Chart = ({}) => {
   const data = ['0', '1', '3', '5', '8', '0', '5'];
   return (
     <LineChart

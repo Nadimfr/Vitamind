@@ -22,6 +22,17 @@ function JournalGeneral() {
   const currentDay = currentDate.toLocaleDateString('en-US', options);
 
   const today = new Date(Date.now());
+  const [theme, setTheme] = useState();
+
+  useEffect(() => {
+    async function fetchData() {
+      const whatTheme = await AsyncStorage.getItem('theme');
+      setTheme(whatTheme);
+    }
+    setInterval(() => {
+      fetchData();
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -49,7 +60,8 @@ function JournalGeneral() {
   return (
     <View
       style={{
-        backgroundColor: 'white',
+        backgroundColor: theme == 'dark' ? '#142F21' : 'white',
+
         flex: 1,
       }}
     >

@@ -13,7 +13,7 @@ const Appearance = ({ navigation }) => {
     setIsEnabled((previousState) => !previousState);
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     setCurrentTheme(newTheme);
-    AsyncStorage.setItem('theme', newTheme);
+    await AsyncStorage.setItem('theme', newTheme).then(() => {});
   };
 
   useEffect(() => {
@@ -32,8 +32,8 @@ const Appearance = ({ navigation }) => {
         backgroundColor: currentTheme == 'dark' ? '#142F21' : 'white',
       }}
     >
-      <View style={styles.Header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      {/* <View style={styles.Header}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Ionicons
             name="chevron-back"
             color={currentTheme == 'dark' ? 'white' : 'black'}
@@ -59,7 +59,13 @@ const Appearance = ({ navigation }) => {
             size={20}
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
+
+      <Header
+        screenName="Appearance"
+        onBack={() => navigation.navigate('Profile')}
+        dots
+      />
 
       <View style={styles.Layout}>
         <Text

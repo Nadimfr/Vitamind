@@ -14,6 +14,17 @@ import * as api from '../../controllers/ApiJournal';
 const Journals = ({ navigation }) => {
   const [userId, setUserId] = useState('');
   const [journals, setJournals] = useState([]);
+  const [theme, setTheme] = useState();
+
+  useEffect(() => {
+    async function fetchData() {
+      const whatTheme = await AsyncStorage.getItem('theme');
+      setTheme(whatTheme);
+    }
+    setInterval(() => {
+      fetchData();
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -34,11 +45,23 @@ const Journals = ({ navigation }) => {
   }, [journals]);
 
   return (
-    <View>
+    <View
+      style={{
+        backgroundColor: theme == 'dark' ? '#142F21' : 'white',
+      }}
+    >
       <Header screenName="Journals" dots onBack={() => navigation.goBack()} />
 
-      <ScrollView style={{ paddingHorizontal: 20 }}>
-        <Button title="Create" onPress={() => navigation.navigate('Journal')} />
+      <ScrollView
+        style={{
+          paddingHorizontal: 20,
+        }}
+      >
+        <Button
+          theme={theme}
+          title="Create"
+          onPress={() => navigation.navigate('Journal')}
+        />
 
         {journals.map((j, idx) => {
           const date = new Date(j.date);

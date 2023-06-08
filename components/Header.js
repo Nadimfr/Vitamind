@@ -7,14 +7,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Header({ dots, screenName, onBack }) {
-  const [appTheme, setAppTheme] = useState();
+  const [theme, setTheme] = useState();
 
   useEffect(() => {
-    AsyncStorage.getItem('theme').then((theme) => {
-      if (theme) {
-        setAppTheme(theme);
-      }
-    });
+    async function fetchData() {
+      const whatTheme = await AsyncStorage.getItem('theme');
+      setTheme(whatTheme);
+    }
+    setInterval(() => {
+      fetchData();
+    }, 100);
   }, []);
 
   return (
@@ -24,16 +26,17 @@ function Header({ dots, screenName, onBack }) {
           <TouchableOpacity style={{ width: '33.33%' }} onPress={onBack}>
             <Ionicons
               name="chevron-back"
-              color={appTheme == 'dark' ? 'white' : 'black'}
+              color={theme == 'dark' ? 'white' : 'black'}
               size={25}
             />
           </TouchableOpacity>
           <Text
+            numberOfLines={1}
             style={[
               styles.Title,
 
               {
-                color: appTheme == 'dark' ? 'white' : 'black',
+                color: theme == 'dark' ? 'white' : 'black',
               },
             ]}
           >
@@ -49,7 +52,7 @@ function Header({ dots, screenName, onBack }) {
               styles.Title,
 
               {
-                color: appTheme == 'dark' ? 'white' : 'black',
+                color: theme == 'dark' ? 'white' : 'black',
               },
             ]}
           >
@@ -97,11 +100,8 @@ const styles = StyleSheet.create({
   Title: {
     width: '33.33%',
     fontSize: 20,
-
     fontWeight: '500',
-
     fontFamily: 'Poppins_SemiBold',
-
     textAlign: 'center',
   },
 });

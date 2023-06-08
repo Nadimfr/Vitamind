@@ -141,9 +141,9 @@ function Home({ navigation }) {
             Doctors available today
           </Text>
 
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Text>see all</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <ScrollView

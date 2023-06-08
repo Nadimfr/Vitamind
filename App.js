@@ -22,6 +22,7 @@ import JournalGeneral from './screens/Branded/JournalGeneral';
 import Journals from './screens/Branded/Journals';
 import Recommender from './screens/Branded/Recommender';
 import Questionary from './screens/Branded/Questionary';
+import History from './screens/Branded/History';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -78,22 +79,28 @@ function LoggedInTabs() {
         name="Detect"
         component={Detect}
         options={{
-          tabBarLabel: '',
-          tabBarLabelStyle: { display: 'none' },
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              color="white"
-              name="circle-outline"
-              size={50}
-            />
-          ),
+          tabBarLabel: 'V',
+          // tabBarLabelStyle: { display: 'none' },
+          // tabBarIcon: ({ color }) => (
+          //   <MaterialCommunityIcons
+          //     color="white"
+          //     name="circle-outline"
+          //     size={50}
+          //   />
+          // ),
+          tabBarLabelStyle: {
+            fontSize: 40,
+            fontFamily: 'Poppins_SemiBold',
+            color: 'white',
+          },
+          tabBarIconStyle: { display: 'none' },
           tabBarStyle: { display: 'none' },
           headerShown: false,
         }}
       />
       <Tab.Screen
         name="History"
-        component={Questionary}
+        component={History}
         options={{
           tabBarStyle: { display: 'none' }, //to be removed
           tabBarLabelStyle: { color: 'white', fontFamily: 'Poppins_SemiBold' },
@@ -137,6 +144,7 @@ function App() {
   useEffect(() => {
     getToken();
     console.log('WHATS MY TOKEN => ', token);
+    token && setLoggedIn(true);
   }, [token]);
 
   const getToken = async () => {
@@ -189,44 +197,44 @@ function App() {
             />
           )}
 
-          {/* {!token && ( */}
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{
-              headerShown: false,
-              tabBarStyle: {
-                display: 'none',
-              },
-            }}
-          />
-          {/* )} */}
+          {!loggedIn && (
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+          )}
 
-          {/* {!token && ( */}
-          <Stack.Screen
-            name="Register"
-            component={Register}
-            options={{
-              headerShown: false,
-              tabBarStyle: {
-                display: 'none',
-              },
-            }}
-          />
-          {/* )} */}
+          {!loggedIn && (
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+          )}
 
-          {/* {!token && ( */}
-          <Stack.Screen
-            name="Verify"
-            component={Verify}
-            options={{
-              headerShown: false,
-              tabBarStyle: {
-                display: 'none',
-              },
-            }}
-          />
-          {/* )} */}
+          {!loggedIn && (
+            <Stack.Screen
+              name="Verify"
+              component={Verify}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+          )}
 
           <Stack.Screen
             name="Home"
