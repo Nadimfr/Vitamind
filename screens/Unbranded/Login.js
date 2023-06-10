@@ -2,6 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useContext, useState } from 'react';
 import {
   Alert,
+  Dimensions,
   Image,
   KeyboardAvoidingView,
   StatusBar,
@@ -15,12 +16,20 @@ import Popup from '../../components/Popup';
 import TextField from '../../components/TextField';
 import * as api from '../../controllers/ApiUser';
 import { storeData } from '../../helpers/AsyncStorage';
+import * as WebBrowser from 'expo-web-browser';
 
 function Login({ navigation }) {
   const [user, setUser] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [reset, setReset] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [showEmailPopup, setShowEmailPopup] = useState(false);
+  const [result, setResult] = useState(null);
+
+  const _handlePressButtonAsync = async () => {
+    let result = await WebBrowser.openBrowserAsync('https://facebook.com');
+    setResult(result);
+  };
 
   const handleLogin = (userInfo) => {
     setLoading(true);
@@ -30,7 +39,6 @@ function Login({ navigation }) {
         setLoading(false);
         setShowPopup(true);
       } else {
-        console.log('login screen', res);
         storeData('token', res?.data?.token);
         storeData('user', res?.data?.user);
         navigation.navigate('Home');
@@ -50,6 +58,7 @@ function Login({ navigation }) {
           onPress={() => setShowPopup(false)}
         />
       )}
+
       <KeyboardAvoidingView behavior="position">
         <Text style={[styles.text, { color: '#142F21' }]}>Welcome to</Text>
         <Text
@@ -86,6 +95,7 @@ function Login({ navigation }) {
           <TouchableOpacity
             activeOpacity={0.5}
             style={{ alignSelf: 'flex-end', marginTop: 5 }}
+            onPress={_handlePressButtonAsync}
           >
             <Text style={styles.text1}>Forgot Password ?</Text>
           </TouchableOpacity>
@@ -211,6 +221,14 @@ function Login({ navigation }) {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+
+      {reset && (
+        <WebView
+          style={{ flex: 1 }}
+          originWhitelist={['*']}
+          source={{ html: '<h1><center>Hello world</center></h1>' }}
+        />
+      )}
     </View>
   );
 }

@@ -13,7 +13,7 @@ import Header from '../../components/Header';
 import MotivationalQuote from '../../components/MotivationalQuote';
 import { createClient } from 'pexels';
 import Doctor from '../../components/Doctor';
-import Chart from '../../components/Chart';
+// import Chart from '../../components/Chart';
 import { clearAll, removeKey } from '../../helpers/AsyncStorage';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -186,10 +186,10 @@ function Home({ navigation }) {
           </Text>
         </View>
 
+        {/* <Chart />
         <Chart />
         <Chart />
-        <Chart />
-        <Chart />
+        <Chart /> */}
       </ScrollView>
     </>
   );

@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import Button from '../../components/Button';
 import TextField from '../../components/TextField';
-import * as Animatable from 'react-native-animatable';
 import * as api from '../../controllers/ApiUser';
 import Popup from '../../components/Popup';
 
