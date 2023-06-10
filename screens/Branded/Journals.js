@@ -1,12 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import {
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-} from 'react-native';
+import { ScrollView, Text, View, StyleSheet } from 'react-native';
 import Button from '../../components/Button';
 import Header from '../../components/Header';
 import * as api from '../../controllers/ApiJournal';
@@ -55,6 +49,7 @@ const Journals = ({ navigation }) => {
       <ScrollView
         style={{
           paddingHorizontal: 20,
+          height: '100%',
         }}
       >
         <Button
@@ -128,10 +123,10 @@ export default Journals;
 
 const styles = StyleSheet.create({
   titleheading: {
-    textAlign: 'Left',
+    textAlign: 'left',
     fontSize: 22,
     fontFamily: 'Poppins_SemiBold',
-    alignSelf: 'left',
+    alignSelf: 'flex-start',
     color: '#142F21',
     paddingHorizontal: 15,
   },

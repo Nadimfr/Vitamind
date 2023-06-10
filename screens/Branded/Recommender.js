@@ -1,34 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, Text, Dimensions } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { FlatGrid } from 'react-native-super-grid';
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as api from '../../controllers/ApiUser';
+import * as WebBrowser from 'expo-web-browser';
 
 function Recommender({ navigation, route }) {
-  const [items, setItems] = useState([
-    { name: 'TURQUOISE', code: '#142F21' },
-    { name: 'EMERALD', code: '#B2ECC4' },
-    { name: 'PETER RIVER', code: '#42A45C' },
-    { name: 'TURQUOISE', code: '#142F21' },
-    { name: 'EMERALD', code: '#B2ECC4' },
-    { name: 'PETER RIVER', code: '#42A45C' },
-    { name: 'TURQUOISE', code: '#142F21' },
-    { name: 'EMERALD', code: '#B2ECC4' },
-    { name: 'PETER RIVER', code: '#42A45C' },
-  ]);
   const [recommendations, setRecommendations] = useState([]);
 
-  useEffect(() => {
-    console.log('PARAMS', route.params);
+  const _handlePressButtonAsync = async (link) => {
+    let result = await WebBrowser.openBrowserAsync(link);
+  };
 
+  useEffect(() => {
     api
       .getRecommendationByType(
-        route.params.emotion == 'sadness' ? 'sad' : route.params.emotion
+        route?.params?.emotion == 'sadness' ? 'sad' : route?.params?.emotion
       )
       .then((res) => {
         console.log('RESS', res);
-        setRecommendations(res);
+        const randomIndex = Math.floor(Math.random() * (res.length - 3));
+        setRecommendations(res.slice(randomIndex, randomIndex + 4));
       });
   }, []);
 
@@ -43,41 +42,43 @@ function Recommender({ navigation, route }) {
     >
       <TouchableOpacity
         style={{ width: '33.33%' }}
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation?.goBack()}
       >
         <Ionicons name="chevron-back" color={'black'} size={25} />
       </TouchableOpacity>
       <Text style={styles.titleheading}>Vitamind,</Text>
       <Text style={styles.titleheading2}>recommends</Text>
       <Text style={styles.titleheading3}>you to:</Text>
-      <View style={{ paddingHorizontal: '5%', marginTop: 50 }}>
-        {recommendations.map((r, idx) => (
+      <ScrollView style={{ paddingHorizontal: '5%', marginTop: 50 }}>
+        {recommendations?.map((r, idx) => (
           <View>
-            <Text style={{ fontSize: 20, fontFamily: 'Poppins_SemiBold' }}>
-              {idx + 1}- {r.title}
+            <Text style={{ fontSize: 24, fontFamily: 'Poppins_SemiBold' }}>
+              {idx + 1}- {r?.title}
             </Text>
 
-            <View style={{ marginTop: 25 }}>
-              {r.details.map((rd) => {
-                console.log('first', rd.image_file);
+            <ScrollView horizontal={true} style={{ marginTop: 25 }}>
+              {r?.details?.map((rd) => {
                 return (
-                  <View>
+                  <View style={{ marginBottom: 25, flex: 1 }}>
                     <Text
                       style={{
                         fontSize: 18,
                         fontFamily: 'Poppins_SemiBold',
                         color: '#42A45C',
+                        textTransform: 'capitalize',
                       }}
                     >
-                      {rd.title}
+                      {rd?.title}
                     </Text>
                     <TouchableOpacity
+                      activeOpacity={0.8}
                       style={{
                         width: '100%',
                         height: 200,
                         marginTop: 10,
                         borderRadius: 20,
                       }}
+                      onPress={() => _handlePressButtonAsync(rd?.link_url)}
                     >
                       <Image
                         style={{
@@ -88,43 +89,43 @@ function Recommender({ navigation, route }) {
                           borderBottomRightRadius: 150,
                           height: 200,
                         }}
-                        src={`${rd.image_file}`}
+                        src={`${rd?.image_file}`}
                         resizeMode="cover"
                       />
                     </TouchableOpacity>
                   </View>
                 );
               })}
-            </View>
+            </ScrollView>
           </View>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   titleheading: {
-    textAlign: 'Left',
+    textAlign: 'left',
     fontSize: 40,
     fontFamily: 'Poppins_Regular',
-    alignSelf: 'left',
+    alignSelf: 'flex-start',
     color: '#142F21',
     marginLeft: 10,
   },
   titleheading2: {
-    textAlign: 'Left',
+    textAlign: 'left',
     fontSize: 30,
     fontFamily: 'Poppins_Bold',
-    alignSelf: 'left',
+    alignSelf: 'flex-start',
     color: '#42A45C',
     marginLeft: 10,
   },
   titleheading3: {
-    textAlign: 'Left',
+    textAlign: 'left',
     fontSize: 30,
     fontFamily: 'Poppins_Bold',
-    alignSelf: 'left',
+    alignSelf: 'flex-start',
     color: '#42A45C',
     marginLeft: 10,
   },

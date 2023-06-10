@@ -33,6 +33,7 @@
     "face-api.js": "^0.22.2",
     "lottie-react-native": "^5.1.5",
     "mailgun-js": "^0.22.0",
+    "moment": "^2.29.4",
     "pexels": "^1.4.0",
     "react": "18.2.0",
     "react-native": "0.71.3",

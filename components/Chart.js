@@ -1,49 +1,120 @@
-// import React from 'react';
-// import { Dimensions, StyleSheet, View } from 'react-native';
-// import {
-//   LineChart,
-//   BarChart,
-//   PieChart,
-//   ProgressChart,
-//   ContributionGraph,
-//   StackedBarChart,
-// } from 'react-native-chart-kit';
+import React from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
-// const Chart = ({}) => {
-//   const data = ['0', '1', '3', '5', '8', '0', '5'];
-//   return (
-//     <LineChart
-//       data={{
-//         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-//         datasets: [
-//           {
-//             data: data,
-//           },
-//         ],
-//       }}
-//       width={Dimensions.get('window').width}
-//       height={270}
-//       yAxisInterval={5} // optional, defaults to 1
-//       chartConfig={{
-//         backgroundGradientFrom: '#fff',
-//         backgroundGradientTo: '#fff',
-//         decimalPlaces: 2,
-//         color: (opacity = 1) => `rgba(20, 47, 33 / 0.5)`,
-//         labelColor: (opacity = 1) => `rgba(20, 20, 0, ${opacity})`,
-//       }}
-//       bezier
-//     />
-//   );
-// };
+const Chart = ({ theme, data }) => {
+  return (
+    <View>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          //   backgroundColor: '#42A45C',
+          backgroundColor: 'rgba(66,164,92/0.25)',
+          padding: 20,
+          borderRadius: 25,
+          height: 200,
+          maxHeight: 200,
+        }}
+      >
+        <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+          <View
+            style={{
+              maxHeight: 150,
+              height: data?.sad ? data?.sad : 0.5,
+              width: 15,
+              backgroundColor: '#142F21',
+              borderRadius: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 10 }}>
+              {data?.sad ? data?.sad / 10 : ''}
+            </Text>
+          </View>
+          <Text style={{ fontSize: 32 }}>☹️</Text>
+        </View>
 
-// export default Chart;
+        <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+          <View
+            style={{
+              height: data?.fear ? data?.fear : 0.5,
+              width: 15,
+              backgroundColor: '#142F21',
+              borderRadius: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 10 }}>
+              {data?.fear ? data?.fear / 10 : ''}
+            </Text>
+          </View>
+          <Text style={{ fontSize: 32 }}>😱</Text>
+        </View>
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#F5FCFF',
-//   },
-//   chart: {
-//     flex: 1,
-//   },
-// });
+        <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+          <View
+            style={{
+              maxHeight: 150,
+              height: data?.surprised ? data?.surprised : 0.5,
+              width: 15,
+              backgroundColor: '#142F21',
+              borderRadius: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 10 }}>
+              {data?.surprised ? data?.surprised / 10 : ''}
+            </Text>
+          </View>
+          <Text style={{ fontSize: 32 }}>😳</Text>
+        </View>
+
+        <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+          <View
+            style={{
+              maxHeight: 150,
+              height: data?.disgussed ? data?.disgussed : 0.5,
+              width: 15,
+              backgroundColor: '#142F21',
+              borderRadius: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 10 }}>
+              {data?.disgussed ? data?.disgussed / 10 : ''}
+            </Text>
+          </View>
+          <Text style={{ fontSize: 32 }}>🤢</Text>
+        </View>
+
+        <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+          <View
+            style={{
+              maxHeight: 150,
+              height: data?.happy ? data?.happy : 0.5,
+              width: 15,
+              backgroundColor: '#142F21',
+              borderRadius: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 10 }}>
+              {data?.happy ? data?.happy / 10 : ''}
+            </Text>
+          </View>
+          <Text style={{ fontSize: 32 }}>😀</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export default Chart;
+
+const styles = StyleSheet.create({});

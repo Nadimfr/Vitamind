@@ -57,14 +57,24 @@ function DetectText({ onBack }) {
 
       await api
         .getRecommendationByType(
-          highestEmotion == 'sadness' ? 'sad' : highestEmotion
+          highestEmotion == 'sadness'
+            ? 'sad'
+            : highestEmotion == 'joy'
+            ? 'happy'
+            : highestEmotion
         )
         .then((res) => {
           setRecommendations(res);
         });
       let data = {
         user_id: userId,
-        text: `Chat with us,${highestEmotion}`,
+        text: `Chat with us,${
+          highestEmotion == 'sadness'
+            ? 'sad'
+            : highestEmotion == 'joy'
+            ? 'happy'
+            : highestEmotion
+        }`,
         created_at: today,
       };
       await api.historyCreate(data).then((res) => {

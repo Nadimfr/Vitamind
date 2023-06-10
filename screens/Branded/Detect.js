@@ -31,7 +31,7 @@ function FaceExpression({ showPopup, onFinish, setActive }) {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
@@ -67,9 +67,10 @@ function FaceExpression({ showPopup, onFinish, setActive }) {
     });
 
     try {
+      console.log('formdata', formData);
       const response = await axios.post(url, formData, headers);
       console.log('UPLOAD SUCCESS', response.data.data.url);
-      detectEmotions(response.data.data.url);
+      await detectEmotions(response.data.data.url);
     } catch (error) {
       console.log('ERROR', error);
     }

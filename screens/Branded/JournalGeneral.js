@@ -109,10 +109,10 @@ export default JournalGeneral;
 
 const styles = StyleSheet.create({
   titleheading: {
-    textAlign: 'Left',
+    textAlign: 'left',
     fontSize: 25,
     fontFamily: 'Poppins_SemiBold',
-    alignSelf: 'left',
+    alignSelf: 'flex-start',
     color: '#142F21',
   },
 

@@ -112,6 +112,7 @@ function LoggedInTabs() {
           headerShown: false,
         }}
       />
+
       <Tab.Screen
         name="Profile"
         component={Profile}

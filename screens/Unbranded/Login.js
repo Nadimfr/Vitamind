@@ -21,7 +21,6 @@ import * as WebBrowser from 'expo-web-browser';
 function Login({ navigation }) {
   const [user, setUser] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
-  const [reset, setReset] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [showEmailPopup, setShowEmailPopup] = useState(false);
   const [result, setResult] = useState(null);
@@ -35,13 +34,16 @@ function Login({ navigation }) {
     setLoading(true);
     console.log('USER', userInfo);
     api.userLogin(userInfo).then((res) => {
-      if (res == 404) {
+      if (res == 400) {
+        setLoading(false);
+        setShowPopup(true);
+      } else if (res == 404) {
         setLoading(false);
         setShowPopup(true);
       } else {
         storeData('token', res?.data?.token);
         storeData('user', res?.data?.user);
-        navigation.navigate('Home');
+        res?.data?.token && navigation.navigate('Home');
         setLoading(false);
       }
     });
@@ -221,14 +223,6 @@ function Login({ navigation }) {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-
-      {reset && (
-        <WebView
-          style={{ flex: 1 }}
-          originWhitelist={['*']}
-          source={{ html: '<h1><center>Hello world</center></h1>' }}
-        />
-      )}
     </View>
   );
 }
