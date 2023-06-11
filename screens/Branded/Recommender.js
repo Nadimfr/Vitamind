@@ -11,6 +11,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as api from '../../controllers/ApiUser';
 import * as WebBrowser from 'expo-web-browser';
+import Swiper from 'react-native-swiper';
 
 function Recommender({ navigation, route }) {
   const [recommendations, setRecommendations] = useState([]);
@@ -56,10 +57,11 @@ function Recommender({ navigation, route }) {
               {idx + 1}- {r?.title}
             </Text>
 
-            <ScrollView horizontal={true} style={{ marginTop: 25 }}>
+            {/* <ScrollView horizontal={true} style={{ marginTop: 25 }}> */}
+            <Swiper loop={false} activeDotColor="green">
               {r?.details?.map((rd) => {
                 return (
-                  <View style={{ marginBottom: 25, flex: 1 }}>
+                  <View>
                     <Text
                       style={{
                         fontSize: 18,
@@ -78,7 +80,11 @@ function Recommender({ navigation, route }) {
                         marginTop: 10,
                         borderRadius: 20,
                       }}
-                      onPress={() => _handlePressButtonAsync(rd?.link_url)}
+                      onPress={() =>
+                        rd?.title == 'Journal'
+                          ? navigation.navigate('Journals')
+                          : _handlePressButtonAsync(rd?.link_url)
+                      }
                     >
                       <Image
                         style={{
@@ -96,7 +102,8 @@ function Recommender({ navigation, route }) {
                   </View>
                 );
               })}
-            </ScrollView>
+            </Swiper>
+            {/* </ScrollView> */}
           </View>
         ))}
       </ScrollView>

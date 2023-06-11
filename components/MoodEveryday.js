@@ -1,190 +1,79 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import Swiper from 'react-native-swiper';
 
+import happyImage from '../assets/happy.png';
+import disgustImage from '../assets/disgust.png';
+import angryImage from '../assets/angry.png';
+import neutralImage from '../assets/neutral.png';
+import sadImage from '../assets/sad.png';
+import surprisedImage from '../assets/surprised.png';
+import fearImage from '../assets/fear.png';
+import LottieView from 'lottie-react-native';
+
 function MoodEveryday() {
+  const mood = [
+    { value: 'happy', image_file: happyImage },
+    { value: 'disgust', image_file: disgustImage },
+    { value: 'angry', image_file: angryImage },
+    { value: 'neutral', image_file: neutralImage },
+    { value: 'sad', image_file: sadImage },
+    { value: 'surprised', image_file: surprisedImage },
+    { value: 'fear', image_file: fearImage },
+  ];
   return (
-    <Swiper activeDotColor="green">
-      <View
+    <>
+      <LottieView
+        source={require('../lottieAnimations/gradient.json')}
+        autoPlay
+        loop
         style={{
-          paddingTop: 140,
-          paddingHorizontal: 50,
           height: '100%',
-          backgroundColor: '#B2ECC4',
-          backgroundColor: 'rgba(178 236 196 / 0.6)',
+          position: 'absolute',
+          opacity: 0.5,
         }}
-      >
-        <Text style={styles.titleheading}>How are you feeling today?</Text>
-        <Image
-          style={{
-            width: 300,
-            height: 300,
-            alignSelf: 'center',
-            marginTop: 40,
-          }}
-          source={require('../assets/happy.png')}
-          resizeMode="center"
-        />
-        <View>
-          <TouchableOpacity style={styles.buttonnext}>
-            <Text style={{ color: 'white', fontSize: 22 }}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View
-        style={{
-          paddingTop: 140,
-          paddingHorizontal: 50,
-          height: '100%',
-          backgroundColor: 'white',
-        }}
-      >
-        <Text style={styles.titleheading1}>How are you feeling today?</Text>
-        <Image
-          style={{
-            width: 300,
-            height: 300,
-            alignSelf: 'center',
-            marginTop: 40,
-          }}
-          source={require('../assets/disgust.png')}
-          resizeMode="center"
-        />
-        <View>
-          <TouchableOpacity style={styles.buttonnext1}>
-            <Text style={{ color: 'white', fontSize: 22 }}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View
-        style={{
-          paddingTop: 140,
-          paddingHorizontal: 50,
-          height: '100%',
-          backgroundColor: '#B2ECC4',
-          backgroundColor: 'rgba(178 236 196 / 0.6)',
-        }}
-      >
-        <Text style={styles.titleheading}>How are you feeling today?</Text>
-        <Image
-          style={{
-            width: 300,
-            height: 300,
-            alignSelf: 'center',
-            marginTop: 40,
-          }}
-          source={require('../assets/angry.png')}
-          resizeMode="center"
-        />
-        <View>
-          <TouchableOpacity style={styles.buttonnext}>
-            <Text style={{ color: 'white', fontSize: 22 }}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View
-        style={{
-          paddingTop: 140,
-          paddingHorizontal: 50,
-          height: '100%',
-          backgroundColor: '#42A45C',
-        }}
-      >
-        <Text style={styles.titleheading}>How are you feeling today?</Text>
-        <Image
-          style={{
-            width: 300,
-            height: 300,
-            alignSelf: 'center',
-            marginTop: 40,
-          }}
-          source={require('../assets/neutral.png')}
-          resizeMode="center"
-        />
-        <View>
-          <TouchableOpacity style={styles.buttonnext}>
-            <Text style={{ color: 'white', fontSize: 22 }}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View
-        style={{
-          paddingTop: 140,
-          paddingHorizontal: 50,
-          height: '100%',
-          backgroundColor: '#142F21',
-        }}
-      >
-        <Text style={styles.titleheading2}>How are you feeling today?</Text>
-        <Image
-          style={{
-            width: 300,
-            height: 300,
-            alignSelf: 'center',
-            marginTop: 40,
-          }}
-          source={require('../assets/sad.png')}
-          resizeMode="center"
-        />
-        <View>
-          <TouchableOpacity style={styles.buttonnext2}>
-            <Text style={{ color: '#142F21', fontSize: 22 }}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View
-        style={{
-          paddingTop: 140,
-          paddingHorizontal: 50,
-          height: '100%',
-          backgroundColor: '#B2ECC4',
-          backgroundColor: 'rgba(178 236 196 / 0.6)',
-        }}
-      >
-        <Text style={styles.titleheading}>How are you feeling today?</Text>
-        <Image
-          style={{
-            width: 300,
-            height: 300,
-            alignSelf: 'center',
-            marginTop: 40,
-          }}
-          source={require('../assets/surprised.png')}
-          resizeMode="center"
-        />
-        <View>
-          <TouchableOpacity style={styles.buttonnext}>
-            <Text style={{ color: 'white', fontSize: 22 }}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View
-        style={{
-          paddingTop: 140,
-          paddingHorizontal: 50,
-          height: '100%',
-          backgroundColor: '#142F21',
-        }}
-      >
-        <Text style={styles.titleheading2}>How are you feeling today?</Text>
-        <Image
-          style={{
-            width: 300,
-            height: 300,
-            alignSelf: 'center',
-            marginTop: 40,
-          }}
-          source={require('../assets/fear.png')}
-          resizeMode="center"
-        />
-        <View>
-          <TouchableOpacity style={styles.buttonnext2}>
-            <Text style={{ color: '#142F21', fontSize: 22 }}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Swiper>
+      />
+      <Swiper loop={false} activeDotColor="green">
+        {mood.map((m, idx) => {
+          return (
+            <View
+              key={idx}
+              style={{
+                paddingTop: 140,
+                paddingHorizontal: 50,
+                height: '100%',
+              }}
+            >
+              <Text style={styles.titleheading1}>
+                How are you feeling today?
+              </Text>
+              <Image
+                style={{
+                  width: 300,
+                  height: 300,
+                  alignSelf: 'center',
+                  marginTop: 40,
+                }}
+                source={m.image_file}
+                resizeMode="center"
+              />
+              <View>
+                <TouchableOpacity style={styles.buttonnext1}>
+                  <Text style={{ color: 'white', fontSize: 22 }}>Submit</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        })}
+      </Swiper>
+    </>
   );
 }
 

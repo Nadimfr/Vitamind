@@ -21,14 +21,17 @@ import Chart from '../../components/Chart';
 import * as api from '../../controllers/ApiUser';
 import moment from 'moment';
 import Button from '../../components/Button';
+import Dailyquestion from '../Branded/Dailyquestion';
+import MoodEveryday from '../../components/MoodEveryday';
 
 function Home({ navigation }) {
   const [quote, setQuote] = useState('');
   const [image, setImage] = useState('');
   const [token, setToken] = useState('');
+  const [time, setTime] = useState('');
   const [doctors, setDoctors] = useState([]);
   const [counts, setCounts] = useState({});
-  const [dailyMood, setDailyMood] = useState(false);
+  const [dailyMood, setDailyMood] = useState(true);
   const [morning, setMorning] = useState(false);
 
   const _handlePressButtonAsync = async () => {
@@ -44,12 +47,6 @@ function Home({ navigation }) {
     'SQsOlDuKv74Jy3iwJOvik5rtkIT0STF9IJMykd57nxvDQLlefNbYyCTl'
   );
   const query = 'nature';
-
-  useEffect(() => {
-    setTimeout(() => {
-      setDailyMood(true);
-    }, 5000);
-  }, [dailyMood]);
 
   useEffect(() => {
     client.photos.search({ query, per_page: 1 }).then((photos) => {
@@ -147,11 +144,11 @@ function Home({ navigation }) {
       >
         <Header screenName="Home" />
 
-        {/* {dailyMood && (
-        <Modal visible>
-          <MoodEveryday />
-        </Modal>
-      )} */}
+        {dailyMood && (
+          <Modal visible>
+            <MoodEveryday />
+          </Modal>
+        )}
 
         <StatusBar translucent backgroundColor="black" />
 
