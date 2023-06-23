@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
+import * as api from '../controllers/ApiUser';
 
 import happyImage from '../assets/happy.png';
 import disgustImage from '../assets/disgust.png';
@@ -65,7 +66,14 @@ function MoodEveryday() {
                 resizeMode="center"
               />
               <View>
-                <TouchableOpacity style={styles.buttonnext1}>
+                <TouchableOpacity
+                  onPress={() =>
+                    api.historyCreate(data).then((res) => {
+                      console.log('API REQ', res);
+                    })
+                  }
+                  style={styles.buttonnext1}
+                >
                   <Text style={{ color: 'white', fontSize: 22 }}>Submit</Text>
                 </TouchableOpacity>
               </View>

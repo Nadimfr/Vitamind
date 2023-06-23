@@ -24,20 +24,10 @@ function Profile({ navigation }) {
       onPress: () => navigation.navigate('Settings'),
     },
     {
-      Title: 'Dashboard',
-      Icon: <MaterialCommunityIcons name="account" size={26} />,
-      onPress: '',
-    },
-    {
       Title: 'Appearance',
       Icon: <MaterialCommunityIcons name="account" size={26} />,
       onPress: () => navigation.navigate('Appearance'),
     },
-    // {
-    //   Title: 'Logout',
-    //   Icon: <MaterialCommunityIcons name="account" size={26} />,
-    //   onPress: removeToken,
-    // },
   ];
   const [userId, setUserId] = useState('');
   const [user, setUser] = useState();

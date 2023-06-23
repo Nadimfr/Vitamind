@@ -15,3 +15,12 @@ export const getAllJournalsByUserId = async (userId) => {
     return res.data;
   });
 };
+
+export const journalDelete = async (journalId) => {
+  return await APIKIT.delete(`journal/delete/${journalId}`).then((res) => {
+    if (res.status == 200) {
+      Alert.alert('Journal deleted successfully!');
+      return res;
+    } else Alert.alert('Error');
+  });
+};

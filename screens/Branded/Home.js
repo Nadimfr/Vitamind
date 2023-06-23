@@ -31,7 +31,7 @@ function Home({ navigation }) {
   const [time, setTime] = useState('');
   const [doctors, setDoctors] = useState([]);
   const [counts, setCounts] = useState({});
-  const [dailyMood, setDailyMood] = useState(true);
+  const [dailyMood, setDailyMood] = useState(false);
   const [morning, setMorning] = useState(false);
 
   const _handlePressButtonAsync = async () => {
@@ -250,6 +250,7 @@ function Home({ navigation }) {
         <View style={{ alignSelf: 'center' }}>
           <MotivationalQuote Quote={quote} Image={image} />
         </View>
+
         <View
           style={{
             paddingHorizontal: 20,
@@ -284,7 +285,6 @@ function Home({ navigation }) {
           {doctors.map((d, idx) => (
             <Doctor
               key={idx}
-              online={d.status}
               image={d.image_url}
               onPress={() =>
                 navigation.navigate('DoctorDetailed', {

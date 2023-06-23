@@ -26,7 +26,9 @@ function Login({ navigation }) {
   const [result, setResult] = useState(null);
 
   const _handlePressButtonAsync = async () => {
-    let result = await WebBrowser.openBrowserAsync('https://facebook.com');
+    let result = await WebBrowser.openBrowserAsync(
+      'https://vitamind-henna.vercel.app/'
+    );
     setResult(result);
   };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ImageBackground, TouchableOpacity, View } from 'react-native';
 
-const Doctor = ({ online, image, onPress }) => {
+const Doctor = ({ image, onPress }) => {
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <ImageBackground
@@ -14,21 +14,7 @@ const Doctor = ({ online, image, onPress }) => {
         imageStyle={{ borderRadius: 50 }}
         src={`${image}`}
         resizeMode="cover"
-      >
-        {online && (
-          <View
-            style={{
-              height: 13,
-              width: 13,
-              borderRadius: 50,
-              backgroundColor: '#42A45C',
-              position: 'absolute',
-              bottom: 0,
-              right: 10,
-            }}
-          />
-        )}
-      </ImageBackground>
+      ></ImageBackground>
     </TouchableOpacity>
   );
 };

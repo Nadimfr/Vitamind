@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, Text } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import { useNavigation } from '@react-navigation/native';
 import TextField from '../../components/TextField';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Popup from '../../components/Popup';
 import * as api from '../../controllers/ApiJournal';
 import AsyncStorage from '@react-native-async-storage/async-storage';

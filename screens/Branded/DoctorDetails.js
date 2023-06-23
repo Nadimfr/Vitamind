@@ -1,165 +1,141 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import {
-  Image,
-  Linking,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import Popup from '../../components/Popup';
+import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import * as apiDr from '../../controllers/ApiDoctor';
+import * as WebBrowser from 'expo-web-browser';
+import LottieView from 'lottie-react-native';
+import Button from '../../components/Button';
 
 const DoctorDetails = ({ route, navigation }) => {
   const [doctor, setDoctor] = useState();
-  const [showPopup, setShowPopup] = useState(false);
-  const [selected, setSelected] = useState();
+  const [more, setMore] = useState(false);
 
   useEffect(() => {
     apiDr.getDoctor(route.params.id).then((res) => {
+      console.log(res);
       setDoctor(res);
     });
   }, []);
 
-  const generateZoomAccessToken = async () => {
-    try {
-      const response = await axios.post('https://zoom.us/oauth/token', {
-        grant_type: 'client_credentials',
-        client_id: 'zZ6SOHKjQdiIUKUGEy7avA',
-        client_secret: 'pdA47ZpGOI3uy9mq9RwWvYEc1t1DufMj',
-      });
-
-      const accessToken = response.data.access_token;
-
-      console.log('Zoom API Access Token:', accessToken);
-    } catch (error) {
-      console.error(error);
-    }
+  const _handlePressButtonAsync = async () => {
+    let result = await WebBrowser.openBrowserAsync(doctor?.calendly_url);
+    setResult(result);
   };
 
   return (
-    <View style={{ backgroundColor: 'white', height: '100%' }}>
-      <View
+    <View
+      style={{
+        backgroundColor: 'white',
+        height: '100%',
+        paddingHorizontal: 25,
+      }}
+    >
+      <LottieView
+        source={require('../../lottieAnimations/gradient.json')}
+        autoPlay
+        loop
         style={{
-          width: '100%',
-          height: 250,
-          backgroundColor: '#8EC89D',
-          borderBottomLeftRadius: 75,
-          borderBottomRightRadius: 75,
-          paddingHorizontal: 20,
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-          paddingVertical: 75,
-        }}
-      >
-        <TouchableOpacity
-          style={{ width: '33.33%' }}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="chevron-back" color={'dark'} size={25} />
-        </TouchableOpacity>
-      </View>
-
-      <Image
-        resizeMode="cover"
-        src={`${doctor?.image_url}`}
-        style={{
-          height: 100,
-          width: 100,
-          backgroundColor: 'white',
-          borderRadius: 50,
-          alignSelf: 'center',
-          marginTop: -50,
+          height: '100%',
+          position: 'absolute',
+          opacity: 0.5,
         }}
       />
-      <Text
-        style={{
-          marginTop: 5,
-          marginBottom: 20,
-          textAlign: 'center',
-          fontSize: 20,
-          fontFamily: 'Poppins',
-          alignSelf: 'center',
-        }}
+      <TouchableOpacity
+        style={{ marginTop: 80, marginBottom: 25 }}
+        onPress={() => navigation.goBack()}
       >
-        {doctor?.name}
-      </Text>
+        <Ionicons name="chevron-back" color={'dark'} size={25} />
+      </TouchableOpacity>
 
-      <View
-      // style={{
-      //   paddingLeft: 20,
-      // }}
-      >
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {doctor?.availability?.map((a, idx) => (
-            <TouchableOpacity
-              onPress={() => setSelected(idx)}
-              key={idx}
-              activeOpacity={0.8}
-              style={{
-                marginBottom: 10,
-                backgroundColor: '#A0D1AD',
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 3 },
-                borderRadius: 50,
-                shadowOpacity: 0.25,
-                borderWidth: 2,
-                borderColor: selected === idx ? '#42A45C' : '#A0D1AD',
-                shadowRadius: 1,
-                paddingHorizontal: 20,
-                paddingVertical: 15,
-                marginLeft: 10,
-              }}
-            >
-              <Text style={{ fontFamily: 'Lato' }}>{a}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        {selected && (
-          <View
+      <View style={{ flexDirection: 'row', marginBottom: 15 }}>
+        <Image
+          resizeMode="cover"
+          src={`${doctor?.image_url}`}
+          style={{
+            height: 150,
+            width: 150,
+            backgroundColor: 'white',
+            borderRadius: 25,
+            marginRight: 15,
+          }}
+        />
+        <View>
+          <Text
             style={{
-              marginTop: 10,
-              paddingHorizontal: 50,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
+              // marginTop: 5,
+              marginBottom: 10,
+              textAlign: 'center',
+              fontSize: 20,
+              fontFamily: 'Poppins_SemiBold',
+              width: '75%',
+              textAlign: 'left',
             }}
           >
+            Dr. {doctor?.name}
+          </Text>
+
+          <View style={{ flexDirection: 'row', gap: 10 }}>
             <TouchableOpacity
-              onPress={() => {
-                generateZoomAccessToken();
-                setShowPopup(true);
+              style={{
+                height: 35,
+                width: 35,
+                backgroundColor: 'green',
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
+              onPress={() => Linking.openURL(`${doctor?.linkedin_url}`)}
             >
-              <Text style={{ fontFamily: 'Poppins_SemiBold' }}>
-                Make appointment
-              </Text>
+              <Entypo name="linkedin" color={'white'} size={18} />
             </TouchableOpacity>
 
-            <TouchableOpacity>
-              <Text
-                style={{ fontFamily: 'Poppins_SemiBold', color: '#42A45C' }}
-              >
-                Cancel
-              </Text>
+            <TouchableOpacity
+              style={{
+                height: 35,
+                width: 35,
+                backgroundColor: 'green',
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() => Linking.openURL(`mailto:${doctor?.email_url}`)}
+            >
+              <Entypo name="email" color={'white'} size={18} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                height: 35,
+                width: 35,
+                backgroundColor: 'green',
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() => Linking.openURL(`${doctor?.insta_url}`)}
+            >
+              <Entypo name="instagram" color={'white'} size={18} />
             </TouchableOpacity>
           </View>
-        )}
+        </View>
       </View>
 
-      <Popup
-        title={'Appointment made successfully!'}
-        description={
-          'Make sure to check your email in order to receive your zoom link.'
-        }
-        visible={showPopup}
-        onPress={() => setShowPopup(false)}
-      />
+      <View>
+        <Text
+          style={{ fontFamily: 'Lato', flexWrap: 'wrap', textAlign: 'justify' }}
+          // numberOfLines={!more ? 3 : 100}
+        >
+          {doctor?.description}
+        </Text>
+        {/* <TouchableOpacity activeOpacity={0.8} onPress={() => setMore(!more)}>
+          <Text style={{ color: 'green' }}>Read {!more ? 'more' : 'less'}</Text>
+        </TouchableOpacity> */}
+      </View>
+
+      <View style={{ marginTop: 25 }}>
+        <Button onPress={_handlePressButtonAsync} title="Book an Appointment" />
+      </View>
     </View>
   );
 };

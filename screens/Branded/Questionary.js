@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import Popup from '../../components/Popup';
 import * as api from '../../controllers/ApiUser';
 
 function Questionary() {
@@ -8,6 +8,7 @@ function Questionary() {
   const [quiz, setQuiz] = useState([]);
   const [question, setQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [popup, setPopup] = useState(false);
 
   useEffect(() => {
     api.getQuiz().then((res) => {
@@ -16,11 +17,26 @@ function Questionary() {
   }, []);
 
   useEffect(() => {
+    console.log('ANSWERS []', answers);
+
     // console.log('AAA', answers);
-  }, [clicked]);
+  }, [answers]);
+
+  const addAnswer = (newId) => {
+    setAnswers((prevIds) => [...prevIds, newId]);
+  };
 
   return (
     <View style={{ backgroundColor: '#142F21', flex: 1 }}>
+      {popup && (
+        <Popup
+          title="Result"
+          description={`You got : ${(
+            answers.reduce((acc, curr) => acc + curr, 0) / answers.length
+          ).toFixed(2)}`}
+          onPress={() => setPopup(false)}
+        />
+      )}
       <View
         style={{
           width: '100%',
@@ -110,7 +126,15 @@ function Questionary() {
                   backgroundColor: a?.answer == clicked ? '#B2ECC4' : 'white',
                 },
               ]}
-              onPress={() => setClicked(a?.answer)}
+              onPress={async () => {
+                if (question + 1 !== quiz.length) {
+                  await addAnswer(a?.value);
+                  setQuestion(question + 1);
+                } else {
+                  setPopup(true);
+                }
+              }}
+              // onPress={() => setClicked(a?.answer)}
             >
               <Text style={styles.titleparagraph2}>{a?.answer}</Text>
             </TouchableOpacity>
