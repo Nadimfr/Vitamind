@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../components/Header';
@@ -135,6 +136,7 @@ function Profile({ navigation }) {
       console.log('UPLOAD SUCCESS', response.data.data.url);
       setLoading(false);
     } catch (error) {
+      Alert.alert('Image upload error');
       console.log('Image upload error:', error);
     }
   };
@@ -184,7 +186,7 @@ function Profile({ navigation }) {
               backgroundColor: '#B2ECC4',
               position: 'absolute',
               bottom: 10,
-              right: 90,
+              right: 100,
               borderRadius: 50,
               display: 'flex',
               alignItems: 'center',

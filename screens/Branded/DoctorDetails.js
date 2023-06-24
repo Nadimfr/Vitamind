@@ -21,7 +21,25 @@ const DoctorDetails = ({ route, navigation }) => {
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(doctor?.calendly_url);
-    setResult(result);
+    const handleMeetingScheduled = () => {
+      console.log('SCHEDULEDD');
+      // User scheduled a meeting
+      // Add your logic here
+    };
+
+    const listener = ({ url }) => {
+      if (url === doctor?.calendly_url) {
+        handleMeetingScheduled();
+        WebBrowser.dismissBrowser();
+      }
+    };
+
+    WebBrowser.addEventListener('browserDismissed', listener);
+
+    return () => {
+      WebBrowser.removeEventListener('browserDismissed', listener);
+    };
+    // setResult(result);
   };
 
   return (

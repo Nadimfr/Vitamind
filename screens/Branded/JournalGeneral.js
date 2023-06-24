@@ -52,7 +52,7 @@ function JournalGeneral() {
     await api.journalCreate(data).then((res) => {
       console.log(res);
     });
-    navigation.goBack();
+    // navigation.goBack();
   };
 
   const navigation = useNavigation();
@@ -97,7 +97,7 @@ function JournalGeneral() {
         visible={showPopup}
         onPress={() => {
           setShowPopup(false);
-          // navigation.navigate('Home');
+          navigation.navigate('Home');
         }}
       />
     </View>
