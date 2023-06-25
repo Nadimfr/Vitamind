@@ -23,6 +23,7 @@ import moment from 'moment';
 import Button from '../../components/Button';
 import Dailyquestion from '../Branded/Dailyquestion';
 import MoodEveryday from '../../components/MoodEveryday';
+import { Audio } from 'expo-av';
 
 function Home({ navigation }) {
   const [quote, setQuote] = useState('');
@@ -33,6 +34,23 @@ function Home({ navigation }) {
   const [counts, setCounts] = useState({});
   const [dailyMood, setDailyMood] = useState(false);
   const [morning, setMorning] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const soundObject = new Audio.Sound();
+
+  const loadAndPlayAudio = async () => {
+    try {
+      // Load the audio file
+      await soundObject.loadAsync({
+        uri: 'http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3',
+      });
+
+      // Once the audio is loaded, play it
+      await soundObject.playAsync();
+      set;
+    } catch (error) {
+      console.error('Error loading or playing audio', error);
+    }
+  };
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync('https://facebook.com');
@@ -227,7 +245,7 @@ function Home({ navigation }) {
                   </Text>
                 </View>
 
-                <Button title="Go" onPress={_handlePressButtonAsync2} />
+                <Button title="Play" onPress={loadAndPlayAudio} />
               </View>
 
               <Image
@@ -267,10 +285,11 @@ function Home({ navigation }) {
               color: currentTheme == 'dark' ? 'white' : 'black',
               fontFamily: 'Poppins_SemiBold',
               fontSize: 24,
-              width: Dimensions.get('screen').width * 0.5,
+              width: Dimensions.get('screen').width,
+              marginBottom: 10,
             }}
           >
-            Doctors available today
+            Doctors available
           </Text>
         </View>
 

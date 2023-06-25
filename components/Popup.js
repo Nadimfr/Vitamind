@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Dimensions,
   Linking,
@@ -6,28 +6,28 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import Button from "./Button";
+} from 'react-native';
+import Button from './Button';
 
-const Popup = ({ visible, onPress, title, description }) => {
+const Popup = ({ visible, onPress, title, description, button_title }) => {
   return (
     <Modal visible={visible} transparent>
       <View
         style={{
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "rgba(0 0 0 / 0.5)",
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0 0 0 / 0.5)',
         }}
       >
         <View
           style={{
-            width: Dimensions.get("screen").width / 1.25,
-            backgroundColor: "white",
+            width: Dimensions.get('screen').width / 1.25,
+            backgroundColor: 'white',
             borderRadius: 25,
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "center",
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
             paddingVertical: 25,
             paddingHorizontal: 10,
             gap: !description && 30,
@@ -35,9 +35,9 @@ const Popup = ({ visible, onPress, title, description }) => {
         >
           <Text
             style={{
-              fontFamily: "Poppins_Bold",
+              fontFamily: 'Poppins_Bold',
               fontSize: 18,
-              textAlign: "center",
+              textAlign: 'center',
             }}
           >
             {title}
@@ -45,24 +45,25 @@ const Popup = ({ visible, onPress, title, description }) => {
           {description && (
             <Text
               style={{
-                fontFamily: "Lato",
-                textAlign: "center",
+                fontFamily: 'Lato',
+                textAlign: 'center',
                 marginTop: 10,
                 fontSize: 15,
                 marginHorizontal: 12,
                 marginBottom: 50,
+                lineHeight: 20,
               }}
             >
               {description}
             </Text>
           )}
-          <View style={{ width: "75%" }}>
+          <View style={{ width: '75%' }}>
             <Button
               //   onPress={() => {
               //     Linking.openURL('googlegmail://');
               //   }}
               onPress={onPress}
-              title="Okay"
+              title={button_title ? button_title : 'Okay'}
             />
           </View>
         </View>

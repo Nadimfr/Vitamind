@@ -26,16 +26,13 @@ export const userLogin = async (userInfo) => {
       }
     })
     .catch((error) => {
-      // console.log('NOP', error.response.status);
       return error.response.status;
     });
 };
 
 export const userDelete = async (userId) => {
-  return await APIKIT.post('users/delete', userId).then((res) => {
+  return await APIKIT.delete('users/delete', userId).then((res) => {
     console.log(res.data);
-    // if (res.data) return res.data;
-    // else Alert.alert('Invalid User');
   });
 };
 

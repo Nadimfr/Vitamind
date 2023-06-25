@@ -7,20 +7,49 @@ import {
   Text,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Keyboard,
+  ScrollView,
+  Image,
 } from 'react-native';
 import Button from '../../components/Button';
 import axios from 'axios';
 import TextField from '../../components/TextField';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as api from '../../controllers/ApiUser';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Header from '../../components/Header';
+import * as WebBrowser from 'expo-web-browser';
 
-function DetectText({ onBack }) {
+function DetectText({ onBack, navigation }) {
   const [inputText, setInputText] = useState('');
-  const [focus, setFocus] = useState(false);
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState('');
   const [recommendations, setRecommendations] = useState([]);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  const _handlePressButtonAsync = async (link) => {
+    let result = await WebBrowser.openBrowserAsync(link);
+  };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardOpen(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardOpen(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, [Keyboard]);
 
   const analyzeEmotion = async () => {
     setMessage(inputText);
@@ -64,7 +93,8 @@ function DetectText({ onBack }) {
             : highestEmotion
         )
         .then((res) => {
-          setRecommendations(res);
+          const randomIndex = Math.floor(Math.random() * (res.length - 3));
+          setRecommendations(res.slice(randomIndex, randomIndex + 4));
         });
       let data = {
         user_id: userId,
@@ -84,12 +114,14 @@ function DetectText({ onBack }) {
   };
 
   const [userId, setUserId] = useState('');
+  const [user, setUser] = useState();
 
   useEffect(() => {
     async function fetchData() {
       const userString = await AsyncStorage.getItem('user');
       setUserId(JSON.parse(userString)._id);
-      console.log('IDD', userId);
+      setUser(JSON.parse(userString));
+      console.log(user?.image_url);
     }
 
     fetchData();
@@ -101,10 +133,9 @@ function DetectText({ onBack }) {
     <KeyboardAvoidingView behavior="height" style={styles.container}>
       <StatusBar barStyle="dark-content" />
 
-      <View style={{ flex: 1, marginTop: 100 }}>
-        <TouchableOpacity style={{ width: '33.33%' }} onPress={onBack}>
-          <Ionicons name="chevron-back" color={'black'} size={25} />
-        </TouchableOpacity>
+      <Header onBack={onBack} dots />
+
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         {message && (
           <View
             style={{
@@ -115,6 +146,7 @@ function DetectText({ onBack }) {
               paddingVertical: 10,
               marginBottom: 10,
               borderRadius: 25,
+              position: 'relative',
             }}
           >
             <Text
@@ -124,6 +156,24 @@ function DetectText({ onBack }) {
             >
               {message}
             </Text>
+            <View>
+              <Image
+                style={{
+                  position: 'absolute',
+                  height: 35,
+                  width: 35,
+                  backgroundColor: 'black',
+                  borderRadius: 50,
+                  alignSelf: 'center',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: 0,
+                  left: 0,
+                }}
+                src={`${user?.image_url}`}
+                resizeMode="cover"
+              />
+            </View>
           </View>
         )}
         {response && (
@@ -145,27 +195,59 @@ function DetectText({ onBack }) {
                   color: 'white',
                 }}
               >
-                Hello Nadim, your message looks like {response}!{'\n'}
+                Hello {user?.username}, your message looks like {response}!
+                {'\n'}
                 {'\n'}Here is some recommendations VITAMIND will give you :{' '}
                 {'\n'}
+                {'\n'}
                 {recommendations.map((r, idx) => {
-                  console.log('TITLE', r.title);
-                  return <Text>-{r.title}</Text>;
+                  return (
+                    <View style={{ marginTop: 10 }}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 18,
+                          textDecorationLine: 'underline',
+                          marginBottom: 5,
+                        }}
+                      >
+                        {r.title}
+                      </Text>
+                      {r.details.map((r, idx) => (
+                        <TouchableOpacity
+                          onPress={() =>
+                            r?.title == 'Journal'
+                              ? navigation.navigate('Journals')
+                              : _handlePressButtonAsync(r?.link_url)
+                          }
+                        >
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 16,
+                              marginVertical: 5,
+                            }}
+                          >
+                            • {r.title ? r.title : r.link_url}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  );
                 })}
               </Text>
             </View>
           </View>
         )}
-      </View>
+      </ScrollView>
 
-      <View style={{ paddingBottom: !focus ? 100 : 0 }}>
+      <View style={{ paddingBottom: !keyboardOpen ? 100 : 0 }}>
         <View style={{ marginBottom: 10 }}>
           <TextField
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
             value={inputText}
             onChange={(e) => setInputText(e)}
             placeholder="Type your message..."
+            textDetector
           />
         </View>
         <Button title="Send" onPress={analyzeEmotion} />

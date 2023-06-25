@@ -1,14 +1,18 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Popup from '../../components/Popup';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as api from '../../controllers/ApiUser';
 
-function Questionary() {
+function Questionary({}) {
   const [clicked, setClicked] = useState('');
   const [quiz, setQuiz] = useState([]);
   const [question, setQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [popup, setPopup] = useState(false);
+  const today = new Date(Date.now());
 
   useEffect(() => {
     api.getQuiz().then((res) => {
@@ -26,15 +30,50 @@ function Questionary() {
     setAnswers((prevIds) => [...prevIds, newId]);
   };
 
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      const userString = await AsyncStorage.getItem('user');
+      setUserId(JSON.parse(userString)._id);
+      console.log('IDD', userId);
+    }
+
+    fetchData();
+  }, []);
+
+  const getResult = () => {
+    const average =
+      answers.reduce((acc, curr) => acc + curr, 0) / answers.length;
+
+    if (average >= 0 && average <= 5) {
+      return `Sad`;
+    } else if (average >= 6 && average <= 10) {
+      return `Anxious`;
+    } else if (average >= 11 && average <= 15) {
+      return `Neutral`;
+    } else if (average >= 16 && average <= 20) {
+      return `Happy`;
+    }
+  };
+  const navigation = useNavigation();
+
   return (
     <View style={{ backgroundColor: '#142F21', flex: 1 }}>
       {popup && (
         <Popup
-          title="Result"
-          description={`You got : ${(
-            answers.reduce((acc, curr) => acc + curr, 0) / answers.length
-          ).toFixed(2)}`}
-          onPress={() => setPopup(false)}
+          title="Mood"
+          description={`Your are feeling ${getResult()} at the moment!\n Lets give you some recommendations based on your mood!`}
+          onPress={async () => {
+            setPopup(false);
+            await navigation.navigate('Recommender', {
+              emotion:
+                getResult() == 'Anxious'
+                  ? 'surprise'
+                  : getResult().toLowerCase(),
+            });
+          }}
+          button_title="Let's go"
         />
       )}
       <View
@@ -44,13 +83,18 @@ function Questionary() {
           backgroundColor: '#B2ECC4',
           borderBottomLeftRadius: 75,
           borderBottomRightRadius: 75,
-          paddingHorizontal: 50,
+          paddingHorizontal: '8%',
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'flex-start',
           paddingVertical: 75,
         }}
       >
+        <View>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" color="white" size={40} />
+          </TouchableOpacity>
+        </View>
         <View
           style={{
             width: '100%',
@@ -131,48 +175,23 @@ function Questionary() {
                   await addAnswer(a?.value);
                   setQuestion(question + 1);
                 } else {
+                  let data = {
+                    user_id: userId,
+                    text: `Questions, ${getResult()}`,
+                    created_at: today,
+                  };
+                  await api.historyCreate(data).then((res) => {
+                    console.log('API REQ', res);
+                  });
+                  setQuestion(0);
                   setPopup(true);
                 }
               }}
-              // onPress={() => setClicked(a?.answer)}
             >
               <Text style={styles.titleparagraph2}>{a?.answer}</Text>
             </TouchableOpacity>
           ))}
         </View>
-
-        {/* <View style={{ width: '100%' }}>
-          <TouchableOpacity
-            onPress={() => {
-              setQuestion(question + 1);
-              const array = [...answers];
-              array.push(clicked);
-              setAnswers(array);
-            }}
-            style={styles.buttonnext}
-          >
-            <Text style={{ color: '#142F21', fontSize: 22 }}>
-              {quiz.length == quiz[question]?.id ? 'Submit' : 'Next'}
-            </Text>
-          </TouchableOpacity>
-        </View> */}
-        {/* <TouchableOpacity
-          onPress={() => {
-            setQuestion(0);
-          }}
-          style={styles.buttonnext}
-        >
-          <Text style={{ color: '#142F21', fontSize: 22 }}>Reset</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            console.log('AAAAA', answers);
-          }}
-          style={styles.buttonnext}
-        >
-          <Text style={{ color: '#142F21', fontSize: 22 }}>Submit</Text>
-        </TouchableOpacity> */}
       </View>
     </View>
   );

@@ -1,5 +1,12 @@
-import React from 'react';
-import { View, StyleSheet, TextInput, Text } from 'react-native';
+import React, { useRef } from 'react';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
 const TextField = ({
   onFocus,
@@ -11,27 +18,53 @@ const TextField = ({
   onChange,
   inputStyle,
   journal,
+  textDetector,
 }) => {
+  const textInputRef = useRef(null);
+
+  const handleOutsideClick = () => {
+    if (textInputRef.current) {
+      textInputRef.current.blur();
+    }
+  };
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
-        onFocus={onFocus}
-        onBlur={onBlur}
-        value={value}
-        style={[
-          styles.input,
-          inputStyle,
-          {
-            paddingTop: journal && 30,
-          },
-        ]}
-        placeholder={placeholder}
-        secureTextEntry={password && true}
-        onChangeText={onChange}
-        multiline={journal && true}
-      />
-    </View>
+    <TouchableWithoutFeedback
+      style={styles.container}
+      onPress={Keyboard.dismiss}
+      accessible={false}
+    >
+      <View>
+        <Text style={styles.label}>{label}</Text>
+        <TextInput
+          ref={textInputRef}
+          style={styles.input}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onChange}
+          multiline={journal && true}
+        />
+      </View>
+    </TouchableWithoutFeedback>
+    // <View style={styles.container}>
+    //   <Text style={styles.label}>{label}</Text>
+    //   <TextInput
+    //     ref={textInputRef}
+    //     onFocus={onFocus}
+    //     onBlur={onBlur}
+    //     value={value}
+    //     style={[
+    //       styles.input,
+    //       inputStyle,
+    //       {
+    //         paddingTop: journal && 30,
+    //       },
+    //     ]}
+    //     placeholder={placeholder}
+    //     secureTextEntry={password && true}
+    //     onChangeText={onChange}
+    //     multiline={journal || (textDetector && true)}
+    //   />
+    // </View>
   );
 };
 
@@ -56,5 +89,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 2,
     borderColor: '#142F21',
+    backgroundColor: 'white',
+    paddingTop: 15,
   },
 });

@@ -136,12 +136,16 @@ function FaceExpression({ showPopup, onFinish, setActive }) {
         />
       )}
       <Camera type={type} style={styles.camera} ref={cameraRef}>
-        <TouchableOpacity
-          style={{ marginTop: 75, marginLeft: '8%' }}
-          onPress={setActive}
+        <View
+          style={{
+            marginTop: 75,
+            paddingHorizontal: '8%',
+          }}
         >
-          <Ionicons name="chevron-back" color={'white'} size={35} />
-        </TouchableOpacity>
+          <TouchableOpacity onPress={setActive}>
+            <Ionicons name="chevron-back" color="white" size={40} />
+          </TouchableOpacity>
+        </View>
         <View style={{ marginTop: 525, alignSelf: 'center' }}>
           <TouchableOpacity
             onPress={takePicture}

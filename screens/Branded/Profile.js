@@ -16,6 +16,7 @@ import { clearAll, getData } from '../../helpers/AsyncStorage';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 function Profile({ navigation }) {
   const options = [
@@ -38,9 +39,9 @@ function Profile({ navigation }) {
 
   const removeToken = async () => {
     try {
-      navigation.navigate('Login');
-      setToken('');
+      await setToken('');
       await clearAll();
+      navigation.navigate('Login');
     } catch (error) {
       console.log('Error removing token:', error);
     }
@@ -81,6 +82,7 @@ function Profile({ navigation }) {
   useEffect(() => {
     api.getUserDetails(userId).then((res) => {
       setUser(res.data);
+      // console.log('jjjj', user);
     });
   }, [user]);
 
@@ -168,7 +170,7 @@ function Profile({ navigation }) {
           >
             {loading ? (
               <ActivityIndicator />
-            ) : (
+            ) : user?.image_url ? (
               <Image
                 style={[
                   styles.image,
@@ -177,6 +179,15 @@ function Profile({ navigation }) {
                 src={`${user?.image_url}`}
                 resizeMode="cover"
               />
+            ) : (
+              <View>
+                <Entypo
+                  name="user"
+                  color={'white'}
+                  size={100}
+                  style={{ marginTop: 5 }}
+                />
+              </View>
             )}
           </View>
           <TouchableOpacity

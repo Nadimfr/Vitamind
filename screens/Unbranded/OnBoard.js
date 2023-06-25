@@ -1,5 +1,3 @@
-import axios from 'axios';
-import { Audio } from 'expo-av';
 import React, { useEffect, useRef } from 'react';
 import {
   ImageBackground,

@@ -23,63 +23,6 @@ import Journals from './screens/Branded/Journals';
 import Recommender from './screens/Branded/Recommender';
 import Questionary from './screens/Branded/Questionary';
 import History from './screens/Branded/History';
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-import Button from './components/Button';
-import * as Permissions from 'expo-permissions';
-
-const registerForPushNotificationsAsync = async () => {
-  // Request permissions for push notifications
-  const { status: existingStatus } = await Permissions.getAsync(
-    Permissions.NOTIFICATIONS
-  );
-  let finalStatus = existingStatus;
-
-  // If permission is not granted, ask the user for permission
-  if (existingStatus !== 'granted') {
-    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    finalStatus = status;
-  }
-
-  // If permission is still not granted, exit the function
-  if (finalStatus !== 'granted') {
-    console.log('Failed to obtain push token permission');
-    return;
-  }
-
-  // Get the push token
-  const token = await Notifications.getExpoPushTokenAsync();
-  console.log('Push token:', token);
-};
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
-
-async function sendPushNotification(expoPushToken) {
-  console.log('first,', expoPushToken);
-  const message = {
-    to: expoPushToken,
-    sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
-    data: { someData: 'goes here' },
-  };
-
-  await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(message),
-  });
-}
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -294,6 +237,7 @@ function App() {
             />
           )}
 
+          {/* {loggedIn && ( */}
           <Stack.Screen
             name="Home"
             component={LoggedInTabs}
@@ -304,6 +248,7 @@ function App() {
               },
             }}
           />
+          {/* )} */}
 
           <Stack.Screen
             name="Appearance"

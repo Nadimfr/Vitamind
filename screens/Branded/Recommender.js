@@ -58,7 +58,7 @@ function Recommender({ navigation, route }) {
             </Text>
 
             {/* <ScrollView horizontal={true} style={{ marginTop: 25 }}> */}
-            <Swiper loop={false} activeDotColor="green">
+            <Swiper height={300} loop={false} activeDotColor="green">
               {r?.details?.map((rd) => {
                 return (
                   <View>
