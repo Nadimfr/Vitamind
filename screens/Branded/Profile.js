@@ -39,7 +39,7 @@ function Profile({ navigation }) {
 
   const removeToken = async () => {
     try {
-      await setToken('');
+      // await setToken('');
       await clearAll();
       navigation.navigate('Login');
     } catch (error) {

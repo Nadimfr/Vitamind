@@ -23,6 +23,7 @@ import Journals from './screens/Branded/Journals';
 import Recommender from './screens/Branded/Recommender';
 import Questionary from './screens/Branded/Questionary';
 import History from './screens/Branded/History';
+import PasswordReset from './screens/Unbranded/PasswordReset';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -142,6 +143,12 @@ function App() {
     Lato: require('./assets/fonts/Lato-Regular.ttf'),
   });
 
+  const handleLogout = () => {
+    // Perform logout actions, such as clearing user data or tokens
+    // Then set loggedIn to false to navigate back to the login screen
+    setLoggedIn(false);
+  };
+
   useEffect(() => {
     getToken();
     console.log('WHATS MY TOKEN => ', token);
@@ -228,6 +235,19 @@ function App() {
             <Stack.Screen
               name="Verify"
               component={Verify}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: 'none',
+                },
+              }}
+            />
+          )}
+
+          {!loggedIn && (
+            <Stack.Screen
+              name="Password"
+              component={PasswordReset}
               options={{
                 headerShown: false,
                 tabBarStyle: {

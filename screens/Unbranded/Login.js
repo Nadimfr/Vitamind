@@ -99,7 +99,8 @@ function Login({ navigation }) {
           <TouchableOpacity
             activeOpacity={0.5}
             style={{ alignSelf: 'flex-end', marginTop: 5 }}
-            onPress={_handlePressButtonAsync}
+            onPress={() => navigation.navigate('Password')}
+            // onPress={_handlePressButtonAsync}
           >
             <Text style={styles.text1}>Forgot Password ?</Text>
           </TouchableOpacity>
