@@ -10,7 +10,7 @@ const HowAreYou = ({ name, onPress }) => {
   const [todayText, setTodayText] = useState('');
   const [hasText, setHasText] = useState(false);
 
-  function hasObjectWithDailyText(objects) {
+  const hasObjectWithDailyText = (objects) => {
     const today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
     const dailyText = 'Everyday';
 
@@ -20,8 +20,7 @@ const HowAreYou = ({ name, onPress }) => {
       setTodayText(objText);
       return objDate === today && objText.includes(dailyText.toLowerCase());
     });
-  }
-
+  };
   useEffect(() => {
     async function fetchData() {
       const userString = await AsyncStorage.getItem('user');
@@ -33,12 +32,14 @@ const HowAreYou = ({ name, onPress }) => {
     api.getHistoryByUserId(userId).then((res) => {
       setHistories(res);
     });
-
-    const varHasText = hasObjectWithDailyText(histories);
-    setHasText(varHasText);
-    console.log('first', hasText);
-    // console.log('histories', histories);
   }, [userId]);
+
+  useEffect(() => {
+    if (histories.length > 0) {
+      const varHasText = hasObjectWithDailyText(histories);
+      setHasText(varHasText);
+    }
+  }, [histories]);
 
   return (
     <TouchableOpacity
