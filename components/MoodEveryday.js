@@ -1,15 +1,7 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
 import * as api from '../controllers/ApiUser';
-
 import happyImage from '../assets/happy.png';
 import disgustImage from '../assets/disgust.png';
 import angryImage from '../assets/angry.png';
@@ -19,7 +11,7 @@ import surprisedImage from '../assets/surprised.png';
 import fearImage from '../assets/fear.png';
 import LottieView from 'lottie-react-native';
 
-function MoodEveryday() {
+function MoodEveryday({ onSubmit }) {
   const mood = [
     { value: 'happy', image_file: happyImage },
     { value: 'disgust', image_file: disgustImage },
@@ -29,6 +21,7 @@ function MoodEveryday() {
     { value: 'surprised', image_file: surprisedImage },
     { value: 'fear', image_file: fearImage },
   ];
+
   return (
     <>
       <LottieView
@@ -67,11 +60,7 @@ function MoodEveryday() {
               />
               <View>
                 <TouchableOpacity
-                  onPress={() =>
-                    api.historyCreate(data).then((res) => {
-                      console.log('API REQ', res);
-                    })
-                  }
+                  onPress={() => onSubmit(m.value)}
                   style={styles.buttonnext1}
                 >
                   <Text style={{ color: 'white', fontSize: 22 }}>Submit</Text>

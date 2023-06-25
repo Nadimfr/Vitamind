@@ -15,7 +15,6 @@ import Header from '../../components/Header';
 import MotivationalQuote from '../../components/MotivationalQuote';
 import { createClient } from 'pexels';
 import Doctor from '../../components/Doctor';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as apiDr from '../../controllers/ApiDoctor';
 import Chart from '../../components/Chart';
 import * as api from '../../controllers/ApiUser';
@@ -24,6 +23,8 @@ import Button from '../../components/Button';
 import Dailyquestion from '../Branded/Dailyquestion';
 import MoodEveryday from '../../components/MoodEveryday';
 import { Audio } from 'expo-av';
+import HowAreYou from '../../components/HowAreYou';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({ navigation }) {
   const [quote, setQuote] = useState('');
@@ -34,21 +35,33 @@ function Home({ navigation }) {
   const [counts, setCounts] = useState({});
   const [dailyMood, setDailyMood] = useState(false);
   const [morning, setMorning] = useState(false);
+  const [soundObject, setSoundObject] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const soundObject = new Audio.Sound();
+  const today = new Date(Date.now());
 
-  const loadAndPlayAudio = async () => {
-    try {
-      // Load the audio file
-      await soundObject.loadAsync({
-        uri: 'http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/theme_01.mp3',
-      });
+  useEffect(() => {
+    const loadAudio = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('../../assets/sounds/Meditation.mp3')
+        );
+        setSoundObject(sound);
+      } catch (error) {
+        console.error('Error loading audio', error);
+      }
+    };
 
-      // Once the audio is loaded, play it
-      await soundObject.playAsync();
-      set;
-    } catch (error) {
-      console.error('Error loading or playing audio', error);
+    loadAudio();
+  }, []);
+
+  const togglePlayback = async () => {
+    if (soundObject) {
+      if (isPlaying) {
+        await soundObject.pauseAsync();
+      } else {
+        await soundObject.playAsync();
+      }
+      setIsPlaying(!isPlaying);
     }
   };
 
@@ -107,12 +120,16 @@ function Home({ navigation }) {
   }, [token]);
 
   const [userId, setUserId] = useState('');
+  const [user, setUser] = useState();
   const [history, setHistory] = useState([]);
+  const [histories, setHistories] = useState([]);
+  const [todayText, setTodayText] = useState('');
 
   useEffect(() => {
     async function fetchData() {
       const userString = await AsyncStorage.getItem('user');
       setUserId(JSON.parse(userString)._id);
+      setUser(JSON.parse(userString));
     }
 
     fetchData();
@@ -130,7 +147,7 @@ function Home({ navigation }) {
       });
       setCounts(countsObj);
     });
-  }, [history, userId]);
+  }, [userId, history]);
 
   const [currentTheme, setCurrentTheme] = useState('light');
 
@@ -150,6 +167,27 @@ function Home({ navigation }) {
     });
   }, [doctors]);
 
+  function hasObjectWithDailyText(objects) {
+    const today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+    const dailyText = 'Everyday';
+
+    return objects.some((obj) => {
+      const objDate = obj.created_at.slice(0, 10);
+      const objText = obj.text.toLowerCase();
+      setTodayText(objText);
+      return objDate === today && objText.includes(dailyText.toLowerCase());
+    });
+  }
+
+  // useEffect(() => {
+  //   api.getHistoryByUserId(userId).then((res) => {
+  //     setHistories(res);
+  //   });
+
+  //   const hasText = hasObjectWithDailyText(histories);
+  //   console.log('first', hasText);
+  // }, [userId, histories]);
+
   return (
     <>
       <ScrollView
@@ -164,7 +202,21 @@ function Home({ navigation }) {
 
         {dailyMood && (
           <Modal visible>
-            <MoodEveryday />
+            <MoodEveryday
+              onSubmit={async (e) => {
+                let timer;
+                let data = {
+                  user_id: userId,
+                  text: `Everyday, ${e}`,
+                  created_at: today,
+                };
+                await api.historyCreate(data).then((res) => {
+                  console.log('API REQ', res);
+                });
+
+                setDailyMood(false);
+              }}
+            />
           </Modal>
         )}
 
@@ -176,6 +228,13 @@ function Home({ navigation }) {
             marginBottom: 25,
           }}
         >
+          <HowAreYou
+            disabled={hasObjectWithDailyText(histories) && true}
+            onPress={() => setDailyMood(true)}
+            name={user?.username}
+            text={todayText}
+          />
+
           {moment().isBefore(moment().hour(12).minute(0).second(0), 'hour') ? (
             <View
               style={{
@@ -245,7 +304,10 @@ function Home({ navigation }) {
                   </Text>
                 </View>
 
-                <Button title="Play" onPress={loadAndPlayAudio} />
+                <Button
+                  title={isPlaying ? 'Pause' : 'Play'}
+                  onPress={togglePlayback}
+                />
               </View>
 
               <Image
@@ -321,7 +383,6 @@ function Home({ navigation }) {
           }}
         >
           <TouchableOpacity
-            // onPress={() => console.log('JOURNAL')}
             onPress={() => navigation.navigate('Journals')}
             style={{ width: '100%', height: 125, borderRadius: 10 }}
           >
