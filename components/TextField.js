@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,7 +6,9 @@ import {
   Text,
   Keyboard,
   TouchableWithoutFeedback,
-} from 'react-native';
+  TouchableOpacity,
+} from "react-native";
+import Entypo from "react-native-vector-icons/Entypo";
 
 const TextField = ({
   onFocus,
@@ -21,6 +23,7 @@ const TextField = ({
   textDetector,
 }) => {
   const textInputRef = useRef(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleOutsideClick = () => {
     if (textInputRef.current) {
@@ -33,17 +36,51 @@ const TextField = ({
       onPress={Keyboard.dismiss}
       accessible={false}
     >
-      <View>
-        <Text style={styles.label}>{label}</Text>
-        <TextInput
-          ref={textInputRef}
-          style={styles.input}
-          placeholder={placeholder}
-          value={value}
-          onChangeText={onChange}
-          multiline={journal && true}
-        />
-      </View>
+      {!password ? (
+        <View>
+          <Text style={styles.label}>{label}</Text>
+          <TextInput
+            ref={textInputRef}
+            style={styles.input}
+            placeholder={placeholder}
+            value={value}
+            onChangeText={onChange}
+            multiline={journal && true}
+          />
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.label}>{label}</Text>
+          <View
+            style={[
+              styles.input,
+              {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              },
+            ]}
+          >
+            <TextInput
+              secureTextEntry={showPassword && true}
+              ref={textInputRef}
+              style={{ width: "100%" }}
+              placeholder={placeholder}
+              value={value}
+              onChangeText={onChange}
+              multiline={journal && true}
+            />
+
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              {showPassword ? (
+                <Entypo name="eye-with-line" color={"black"} size={15} />
+              ) : (
+                <Entypo name="eye" color={"black"} size={15} />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </TouchableWithoutFeedback>
     // <View style={styles.container}>
     //   <Text style={styles.label}>{label}</Text>
@@ -72,13 +109,13 @@ export default TextField;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: "100%",
   },
 
   label: {
-    color: '#142F21',
+    color: "#142F21",
     fontSize: 16,
-    fontFamily: 'Lato',
+    fontFamily: "Lato",
     marginLeft: 20,
   },
 
@@ -88,8 +125,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: '#142F21',
-    backgroundColor: 'white',
+    borderColor: "#142F21",
+    backgroundColor: "white",
     paddingTop: 15,
   },
 });
