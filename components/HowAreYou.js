@@ -4,7 +4,7 @@ import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as api from '../controllers/ApiUser';
 
-const HowAreYou = ({ name, onPress }) => {
+const HowAreYou = ({ name, onPress, theme }) => {
   const [histories, setHistories] = useState([]);
   const [userId, setUserId] = useState('');
   const [todayText, setTodayText] = useState('');
@@ -21,6 +21,7 @@ const HowAreYou = ({ name, onPress }) => {
       return objDate === today && objText.includes(dailyText.toLowerCase());
     });
   };
+
   useEffect(() => {
     async function fetchData() {
       const userString = await AsyncStorage.getItem('user');
@@ -32,7 +33,7 @@ const HowAreYou = ({ name, onPress }) => {
     api.getHistoryByUserId(userId).then((res) => {
       setHistories(res);
     });
-  }, [userId]);
+  }, [userId, histories]);
 
   useEffect(() => {
     if (histories.length > 0) {
@@ -41,6 +42,8 @@ const HowAreYou = ({ name, onPress }) => {
     }
   }, [histories]);
 
+  // useEffect(() => {}, [todayText]);
+
   return (
     <TouchableOpacity
       disabled={hasText}
@@ -48,7 +51,6 @@ const HowAreYou = ({ name, onPress }) => {
       style={{
         width: '100%',
         height: 100,
-        backgroundColor: 'red',
         borderRadius: 25,
         marginBottom: 20,
         alignItems: 'flex-start',
@@ -56,7 +58,7 @@ const HowAreYou = ({ name, onPress }) => {
         paddingHorizontal: 20,
         position: 'relative',
         overflow: 'hidden',
-        backgroundColor: '#142F21',
+        backgroundColor: theme == 'dark' ? '#42A45C' : '#142F21',
         opacity: hasText && 0.5,
       }}
     >

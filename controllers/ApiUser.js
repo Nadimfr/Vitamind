@@ -30,6 +30,18 @@ export const userLogin = async (userInfo) => {
     });
 };
 
+export const resetPassword = async (userInfo) => {
+  return await APIKIT.post('users/resetPassword', userInfo)
+    .then((res) => {
+      if (res.status == 200) {
+        return res;
+      }
+    })
+    .catch((error) => {
+      return error.response.status;
+    });
+};
+
 export const userDelete = async (userId) => {
   return await APIKIT.delete('users/delete', userId).then((res) => {
     console.log(res.data);
@@ -44,6 +56,16 @@ export const getUserDetails = async (userId) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+export const getUserDetailsByEmail = async (email) => {
+  try {
+    const response = await APIKIT.get(`users/user-details/${email}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 export const getQuiz = async () => {
@@ -70,6 +92,16 @@ export const historyCreate = async (history) => {
 
 export const getRecommendationByType = async (type) => {
   return await APIKIT.get(`recommendation/${type}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const getHistoryById = async (historyId) => {
+  return await APIKIT.get(`history/${historyId}`)
     .then((res) => {
       return res.data;
     })

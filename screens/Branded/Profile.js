@@ -20,11 +20,11 @@ import Entypo from 'react-native-vector-icons/Entypo';
 
 function Profile({ navigation }) {
   const options = [
-    {
-      Title: 'Settings',
-      Icon: <MaterialCommunityIcons name="account" size={26} />,
-      onPress: () => navigation.navigate('Settings'),
-    },
+    // {
+    //   Title: 'Settings',
+    //   Icon: <MaterialCommunityIcons name="account" size={26} />,
+    //   onPress: () => navigation.navigate('Settings'),
+    // },
     {
       Title: 'Appearance',
       Icon: <MaterialCommunityIcons name="account" size={26} />,

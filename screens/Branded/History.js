@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import Header from '../../components/Header';
 import * as api from '../../controllers/ApiUser';
@@ -32,13 +33,22 @@ const History = ({ navigation }) => {
     <View>
       <Header screenName="History" dots onBack={() => navigation.goBack()} />
       {history?.length !== 0 ? (
-        <View>
+        <ScrollView style={{ marginBottom: 150 }}>
           {history.map((h, idx) => {
             const date = new Date(h.created_at);
             const options = { weekday: 'long', month: 'long', day: 'numeric' };
             const formattedDate = date.toLocaleDateString(undefined, options);
+            const isToday =
+              formattedDate ===
+              new Date().toLocaleDateString(undefined, {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+              });
             return (
-              <View
+              <TouchableOpacity
+                key={idx}
+                disabled={!isToday}
                 style={{
                   marginHorizontal: '10%',
                   display: 'flex',
@@ -50,6 +60,12 @@ const History = ({ navigation }) => {
                   paddingBottom: 10,
                   marginBottom: 20,
                 }}
+                // onPress={() => console.log('NADIM', h)}
+                onPress={() =>
+                  navigation.navigate('Recommender', {
+                    history: h,
+                  })
+                }
               >
                 <View>
                   <Text
@@ -77,12 +93,12 @@ const History = ({ navigation }) => {
                   </Text>
                 </View>
                 <Text style={{ color: 'grey', marginTop: 5 }}>
-                  {formattedDate}
+                  {isToday ? 'Today' : formattedDate}
                 </Text>
-              </View>
+              </TouchableOpacity>
             );
           })}
-        </View>
+        </ScrollView>
       ) : (
         <View
           style={{

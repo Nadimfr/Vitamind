@@ -95,7 +95,7 @@ const Chart = ({ theme, data }) => {
         <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
           <View
             style={{
-              maxHeight: 150,
+              maxHeight: 120,
               height: data?.happy ? data?.happy : 0.5,
               width: 15,
               backgroundColor: '#142F21',

@@ -143,12 +143,6 @@ function App() {
     Lato: require('./assets/fonts/Lato-Regular.ttf'),
   });
 
-  const handleLogout = () => {
-    // Perform logout actions, such as clearing user data or tokens
-    // Then set loggedIn to false to navigate back to the login screen
-    setLoggedIn(false);
-  };
-
   useEffect(() => {
     getToken();
     console.log('WHATS MY TOKEN => ', token);

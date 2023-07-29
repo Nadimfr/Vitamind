@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
-  Image,
-  Modal,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -14,9 +10,29 @@ import Button from '../../components/Button';
 import Header from '../../components/Header';
 import TextField from '../../components/TextField';
 import LottieView from 'lottie-react-native';
+import * as api from '../../controllers/ApiUser';
+import Popup from '../../components/Popup';
 
 const PasswordReset = ({ navigation }) => {
   const [step, setStep] = useState(0);
+  const [code, setCode] = useState(null);
+  const [popup, setPopup] = useState(false);
+  const [enteredCode, setEnteredCode] = useState(null);
+
+  const [user, setUser] = useState({ email: '', password: '' });
+
+  const resetPassword = (userInfo) => {
+    console.log('USER', user);
+    if (code == enteredCode) {
+      api.resetPassword(userInfo).then((res) => {
+        console.log('first', res);
+        if (res.status == 200) {
+          setPopup(true);
+        }
+      });
+    }
+  };
+
   return (
     <View
       style={{
@@ -25,6 +41,17 @@ const PasswordReset = ({ navigation }) => {
       }}
     >
       <Header dots onBack={() => navigation.goBack()} />
+
+      {popup && (
+        <Popup
+          title="Success"
+          description="Password updated successfully!"
+          onPress={() => {
+            setPopup(false);
+            navigation.navigate('Login');
+          }}
+        />
+      )}
 
       {step == 0 ? (
         <View style={styles.container}>
@@ -53,9 +80,22 @@ const PasswordReset = ({ navigation }) => {
             <TextField
               label="Email address"
               placeholder="Enter your email..."
+              value={user.email}
+              onChange={(text) => setUser({ ...user, email: text })}
             />
             <View style={{ marginTop: 15 }}>
-              <Button title="Send Instructions" onPress={() => setStep(1)} />
+              <Button
+                title="Send Instructions"
+                onPress={async () => {
+                  setStep(1);
+                  console.log(user.email);
+                  await api.getUserDetailsByEmail(user?.email).then((res) => {
+                    setCode(res.data.verificationCode);
+                    console.log('jjjj', res.data);
+                  });
+                }}
+                disabled={!user.email && true}
+              />
             </View>
           </View>
         </View>
@@ -93,7 +133,8 @@ const PasswordReset = ({ navigation }) => {
               marginBottom: 35,
             }}
           >
-            We have sent a password recover instructions to your email.
+            We would like you to check the verification code we sent when you
+            created your account. Please verify it accordingly.
           </Text>
 
           <Button title="Next" onPress={() => setStep(2)} />
@@ -105,7 +146,7 @@ const PasswordReset = ({ navigation }) => {
             <Text
               style={{ fontFamily: 'Lato', fontSize: 16, color: '#142F21' }}
             >
-              Skip, I'll confirm later
+              Skip, I'll check later
             </Text>
           </TouchableOpacity>
 
@@ -117,8 +158,7 @@ const PasswordReset = ({ navigation }) => {
                 fontSize: 16,
               }}
             >
-              Did not receive the email? Check your spam filter, or try another
-              email address
+              Check your spam filter*
             </Text>
           </View>
         </View>
@@ -146,15 +186,27 @@ const PasswordReset = ({ navigation }) => {
             </Text>
 
             <View style={{ marginVertical: 35, gap: 10 }}>
-              <TextField label="Verification Code" />
+              <TextField
+                keyboardType="numeric"
+                label="Verification Code"
+                value={enteredCode}
+                onChange={(text) => setEnteredCode(text)}
+              />
 
-              <TextField label="New Password" password />
-              <TextField label="Confirm New Password" password />
+              <TextField
+                label="New Password"
+                password
+                value={user.password}
+                onChange={(text) => setUser({ ...user, password: text })}
+              />
+              {/* <TextField label="Confirm New Password" password /> */}
             </View>
 
             <Button
               title="Reset Password"
-              onPress={() => navigation.navigate('Login')}
+              onPress={() => {
+                resetPassword(user);
+              }}
             />
           </View>
         )

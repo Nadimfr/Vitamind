@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,8 +7,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
-} from "react-native";
-import Entypo from "react-native-vector-icons/Entypo";
+} from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const TextField = ({
   onFocus,
@@ -21,9 +21,10 @@ const TextField = ({
   inputStyle,
   journal,
   textDetector,
+  keyboardType,
 }) => {
   const textInputRef = useRef(null);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
 
   const handleOutsideClick = () => {
     if (textInputRef.current) {
@@ -46,6 +47,7 @@ const TextField = ({
             value={value}
             onChangeText={onChange}
             multiline={journal && true}
+            keyboardType={keyboardType}
           />
         </View>
       ) : (
@@ -55,16 +57,16 @@ const TextField = ({
             style={[
               styles.input,
               {
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               },
             ]}
           >
             <TextInput
               secureTextEntry={showPassword && true}
               ref={textInputRef}
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
               placeholder={placeholder}
               value={value}
               onChangeText={onChange}
@@ -73,9 +75,9 @@ const TextField = ({
 
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
               {showPassword ? (
-                <Entypo name="eye-with-line" color={"black"} size={15} />
+                <Entypo name="eye-with-line" color={'black'} size={15} />
               ) : (
-                <Entypo name="eye" color={"black"} size={15} />
+                <Entypo name="eye" color={'black'} size={15} />
               )}
             </TouchableOpacity>
           </View>
@@ -109,13 +111,13 @@ export default TextField;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
   },
 
   label: {
-    color: "#142F21",
+    color: '#142F21',
     fontSize: 16,
-    fontFamily: "Lato",
+    fontFamily: 'Lato',
     marginLeft: 20,
   },
 
@@ -125,8 +127,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: "#142F21",
-    backgroundColor: "white",
+    borderColor: '#142F21',
+    backgroundColor: 'white',
     paddingTop: 15,
   },
 });

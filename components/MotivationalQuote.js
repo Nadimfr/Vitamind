@@ -15,7 +15,7 @@ const MotivationalQuote = ({ Quote, Image }) => {
       <ImageBackground source={{ uri: Image }} resizeMode="cover">
         <View
           style={{
-            backgroundColor: 'rgba(20 47 33 / 0.5)',
+            backgroundColor: 'rgba(20 47 33 / 0.7)',
             padding: 20,
           }}
         >
@@ -30,7 +30,9 @@ const MotivationalQuote = ({ Quote, Image }) => {
             Today's Quote
           </Text>
           <Text style={{ fontFamily: 'Lato', fontSize: 18, color: 'white' }}>
-            {Quote}
+            {/* {Quote} */}
+            "Your present circumstances don’t determine where you go; they
+            merely determine where you start."{'\n'}— Nido Qubein
           </Text>
         </View>
       </ImageBackground>

@@ -65,15 +65,6 @@ function Home({ navigation }) {
     }
   };
 
-  const _handlePressButtonAsync = async () => {
-    let result = await WebBrowser.openBrowserAsync('https://facebook.com');
-    setMorning(result);
-  };
-  const _handlePressButtonAsync2 = async () => {
-    let result = await WebBrowser.openBrowserAsync('https://anghami.com');
-    setMorning(result);
-  };
-
   const client = createClient(
     'SQsOlDuKv74Jy3iwJOvik5rtkIT0STF9IJMykd57nxvDQLlefNbYyCTl'
   );
@@ -122,8 +113,6 @@ function Home({ navigation }) {
   const [userId, setUserId] = useState('');
   const [user, setUser] = useState();
   const [history, setHistory] = useState([]);
-  const [histories, setHistories] = useState([]);
-  const [todayText, setTodayText] = useState('');
 
   useEffect(() => {
     async function fetchData() {
@@ -167,27 +156,6 @@ function Home({ navigation }) {
     });
   }, [doctors]);
 
-  function hasObjectWithDailyText(objects) {
-    const today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
-    const dailyText = 'Everyday';
-
-    return objects.some((obj) => {
-      const objDate = obj.created_at.slice(0, 10);
-      const objText = obj.text.toLowerCase();
-      setTodayText(objText);
-      return objDate === today && objText.includes(dailyText.toLowerCase());
-    });
-  }
-
-  // useEffect(() => {
-  //   api.getHistoryByUserId(userId).then((res) => {
-  //     setHistories(res);
-  //   });
-
-  //   const hasText = hasObjectWithDailyText(histories);
-  //   console.log('first', hasText);
-  // }, [userId, histories]);
-
   return (
     <>
       <ScrollView
@@ -204,7 +172,6 @@ function Home({ navigation }) {
           <Modal visible>
             <MoodEveryday
               onSubmit={async (e) => {
-                let timer;
                 let data = {
                   user_id: userId,
                   text: `Everyday, ${e}`,
@@ -228,109 +195,68 @@ function Home({ navigation }) {
             marginBottom: 25,
           }}
         >
+          {/* HOW ARE YOU */}
           <HowAreYou
-            disabled={hasObjectWithDailyText(histories) && true}
+            theme={currentTheme}
+            // disabled={hasObjectWithDailyText(histories) && true}
             onPress={() => setDailyMood(true)}
             name={user?.username}
-            text={todayText}
+            // text={todayText}
           />
 
-          {moment().isBefore(moment().hour(12).minute(0).second(0), 'hour') ? (
+          {/* LISTEN TO MUSIC */}
+          <View
+            style={{
+              width: '100%',
+              height: 200,
+              backgroundColor:
+                currentTheme == 'dark' ? '#42A45C' : 'rgba(66,164,92/0.25)',
+              borderRadius: 25,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
             <View
               style={{
-                width: '100%',
-                height: 200,
-                backgroundColor: 'rgba(66,164,92/0.25)',
-                borderRadius: 25,
-                flexDirection: 'row',
+                padding: 20,
                 justifyContent: 'space-between',
               }}
             >
-              <View
-                style={{
-                  padding: 20,
-                  justifyContent: 'space-between',
-                }}
-              >
-                <View>
-                  <Text style={{ fontFamily: 'Lato' }}>To Do</Text>
-                  <Text
-                    style={{ fontSize: 16, fontFamily: 'Poppins_SemiBold' }}
-                  >
-                    Morning Workout
-                  </Text>
-                </View>
-
-                <Button title="Go" onPress={_handlePressButtonAsync} />
+              <View>
+                <Text style={{ fontFamily: 'Lato' }}>To Do</Text>
+                <Text style={{ fontSize: 16, fontFamily: 'Poppins_SemiBold' }}>
+                  Listen to Music
+                </Text>
               </View>
 
-              <Image
-                source={{
-                  uri: 'https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bW9ybmluZyUyMHdvcmtvdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80',
-                }}
-                resizeMode="cover"
-                style={{
-                  width: '35%',
-                  height: '90%',
-                  borderBottomRightRadius: 50,
-                  borderBottomLeftRadius: 50,
-                  marginRight: 25,
-                }}
+              <Button
+                title={isPlaying ? 'Pause' : 'Play'}
+                onPress={togglePlayback}
               />
             </View>
-          ) : (
-            <View
-              style={{
-                width: '100%',
-                height: 200,
-                backgroundColor: 'rgba(66,164,92/0.25)',
-                borderRadius: 25,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+
+            <Image
+              source={{
+                uri: 'https://w0.peakpx.com/wallpaper/327/1001/HD-wallpaper-music-alone-badboy-cartoon-iphone-love-music-on-night-pubg-thumbnail.jpg',
               }}
-            >
-              <View
-                style={{
-                  padding: 20,
-                  justifyContent: 'space-between',
-                }}
-              >
-                <View>
-                  <Text style={{ fontFamily: 'Lato' }}>To Do</Text>
-                  <Text
-                    style={{ fontSize: 16, fontFamily: 'Poppins_SemiBold' }}
-                  >
-                    Listen to Music
-                  </Text>
-                </View>
-
-                <Button
-                  title={isPlaying ? 'Pause' : 'Play'}
-                  onPress={togglePlayback}
-                />
-              </View>
-
-              <Image
-                source={{
-                  uri: 'https://w0.peakpx.com/wallpaper/327/1001/HD-wallpaper-music-alone-badboy-cartoon-iphone-love-music-on-night-pubg-thumbnail.jpg',
-                }}
-                resizeMode="cover"
-                style={{
-                  width: '35%',
-                  height: '90%',
-                  borderBottomRightRadius: 50,
-                  borderBottomLeftRadius: 50,
-                  marginRight: 25,
-                }}
-              />
-            </View>
-          )}
+              resizeMode="cover"
+              style={{
+                width: '35%',
+                height: '90%',
+                borderBottomRightRadius: 50,
+                borderBottomLeftRadius: 50,
+                marginRight: 25,
+              }}
+            />
+          </View>
         </View>
 
+        {/* QUOTE */}
         <View style={{ alignSelf: 'center' }}>
           <MotivationalQuote Quote={quote} Image={image} />
         </View>
 
+        {/* DOCTORS - START */}
         <View
           style={{
             paddingHorizontal: 20,
@@ -354,7 +280,6 @@ function Home({ navigation }) {
             Doctors available
           </Text>
         </View>
-
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -364,18 +289,24 @@ function Home({ navigation }) {
           }}
         >
           {doctors.map((d, idx) => (
-            <Doctor
+            <View
               key={idx}
-              image={d.image_url}
-              onPress={() =>
-                navigation.navigate('DoctorDetailed', {
-                  id: d._id,
-                })
-              }
-            />
+              style={{ marginRight: idx == doctors.length - 1 && 40 }}
+            >
+              <Doctor
+                image={d.image_url}
+                onPress={() =>
+                  navigation.navigate('DoctorDetailed', {
+                    id: d._id,
+                  })
+                }
+              />
+            </View>
           ))}
         </ScrollView>
+        {/* DOCTORS - END */}
 
+        {/* JOURNAL */}
         <View
           style={{
             paddingHorizontal: 20,
@@ -417,6 +348,7 @@ function Home({ navigation }) {
           </TouchableOpacity>
         </View>
 
+        {/* MOOD BREAKDOWN */}
         <View
           style={{
             paddingHorizontal: 20,

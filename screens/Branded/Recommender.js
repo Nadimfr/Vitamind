@@ -73,7 +73,7 @@ function Recommender({ navigation, route }) {
                       {rd?.title}
                     </Text>
                     <TouchableOpacity
-                      activeOpacity={0.8}
+                      activeOpacity={0.9}
                       style={{
                         width: '100%',
                         height: 200,
